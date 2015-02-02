@@ -1,0 +1,33 @@
+    - Dorkbox Annotations - Apache 2.0 License
+      https://github.com/dorkbox
+      Copyright 2014, dorkbox, llc
+
+
+    - AnnotationDetector - Apache 2.0 License
+      https://github.com/rmuller/infomas-asl
+      Copyright 2011 - 2014, XIAM Solutions B.V. (http://www.xiam.nl)
+
+
+    - Dorkbox Utils - Apache 2.0 License
+      https://github.com/dorkbox
+      Copyright 2010, dorkbox, llc
+
+
+    - FilenameUtils.java (normalize + dependencies) - Apache 2.0 License
+      http://commons.apache.org/proper/commons-io/
+      Copyright 2013, ASF
+       Kevin A. Burton
+       Scott Sanders
+       Daniel Rall
+       Christoph.Reck
+       Peter Donald
+       Jeff Turner
+       Matthew Hawthorne
+       Martin Cooper
+       Jeremias Maerki
+       Stephen Colebourne
+
+
+    - SLF4J - MIT License
+      http://www.slf4j.org
+      Copyright 2004-2008, QOS.ch

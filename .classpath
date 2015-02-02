@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Dependencies/logging/slf4j-api-1.7.5.jar" sourcepath="/Dependencies/logging/slf4j-api-1.7.5-sources.zip"/>
+	<classpathentry kind="lib" path="libs/dorkboxUtil_v1.0.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
