@@ -16,7 +16,6 @@
     <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
     <orderEntry type="module" module-name="Dorkbox-Util" />
     <orderEntry type="library" name="logging slf4j-api (1.7.5)" level="application" />
-    <orderEntry type="library" name="bouncyCastle bcpkix-jdk15on (1.51)" level="application" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">
