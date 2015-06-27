@@ -32,15 +32,16 @@ import java.util.zip.ZipFile;
 /**
  * {@code ZipFileIterator} is used to iterate over all entries in a given {@code zip} or
  * {@code jar} file and returning the {@link InputStream} of these entries.
- * <p>
+ * <p/>
  * It is possible to specify an (optional) entry name filter.
- * <p>
+ * <p/>
  * The most efficient way of iterating is used, see benchmark in test classes.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-final class ZipFileIterator {
+final
+class ZipFileIterator {
 
     private final File file;
     private final ZipFile zipFile;
@@ -52,9 +53,9 @@ final class ZipFileIterator {
     /**
      * Create a new {@code ZipFileIterator} instance.
      *
-     * @param zipFile The ZIP file used to iterate over all entries
+     * @param zipFile         The ZIP file used to iterate over all entries
      * @param entryNameFilter (optional) file name filter. Only entry names starting with
-     * one of the specified names in the filter are returned
+     *                        one of the specified names in the filter are returned
      */
     ZipFileIterator(final File file, final String[] entryNameFilter) throws IOException {
         this.file = file;
@@ -64,11 +65,13 @@ final class ZipFileIterator {
         this.entries = this.zipFile.entries();
     }
 
-    public ZipEntry getEntry() {
+    public
+    ZipEntry getEntry() {
         return this.current;
     }
 
-    public InputStream next(final FilenameFilter filter) throws IOException {
+    public
+    InputStream next(final FilenameFilter filter) throws IOException {
         while (this.entries.hasMoreElements()) {
             this.current = this.entries.nextElement();
             if (filter == null || accept(this.current, filter)) {
@@ -85,7 +88,8 @@ final class ZipFileIterator {
         return null;
     }
 
-    private boolean accept(final ZipEntry entry, final FilenameFilter filter) {
+    private
+    boolean accept(final ZipEntry entry, final FilenameFilter filter) {
         if (entry.isDirectory()) {
             return false;
         }

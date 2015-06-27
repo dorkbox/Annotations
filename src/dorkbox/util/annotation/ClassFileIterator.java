@@ -21,22 +21,19 @@
  */
 package dorkbox.util.annotation;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * {@code ClassFileIterator} is used to iterate over all Java ClassFile files available within
  * a specific context.
- * <p>
+ * <p/>
  * For every Java ClassFile ({@code .class}) an {@link InputStream} is returned.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-public class ClassFileIterator implements ClassIterator {
+public
+class ClassFileIterator implements ClassIterator {
 
     private FileIterator fileIter;
     protected final String[] pkgNameFilter;
@@ -47,24 +44,26 @@ public class ClassFileIterator implements ClassIterator {
     /**
      * Create a new {@code ClassFileIterator} returning all Java ClassFile files available
      * from the specified files and/or directories, including sub directories.
-     * <p>
+     * <p/>
      * If the (optional) package filter is defined, only class files staring with one of the
      * defined package names are returned.
      * NOTE: package names must be defined in the native format (using '/' instead of '.').
      */
-    protected ClassFileIterator(final String[] pkgNameFilter) {
+    protected
+    ClassFileIterator(final String[] pkgNameFilter) {
         this.pkgNameFilter = pkgNameFilter;
     }
 
     /**
      * Create a new {@code ClassFileIterator} returning all Java ClassFile files available
      * from the specified files and/or directories, including sub directories.
-     * <p>
+     * <p/>
      * If the (optional) package filter is defined, only class files staring with one of the
      * defined package names are returned.
      * NOTE: package names must be defined in the native format (using '/' instead of '.').
      */
-    protected ClassFileIterator(final File[] filesOrDirectories, final String[] pkgNameFilter) {
+    protected
+    ClassFileIterator(final File[] filesOrDirectories, final String[] pkgNameFilter) {
         this.fileIter = new FileIterator(filesOrDirectories);
         this.pkgNameFilter = pkgNameFilter;
     }
@@ -74,11 +73,10 @@ public class ClassFileIterator implements ClassIterator {
      * The name is either the path name of a file or the name of an ZIP/JAR file entry.
      */
     @Override
-    public String getName() {
+    public
+    String getName() {
         // Both getPath() and getName() are very light weight method calls
-        return this.zipIter == null ?
-            this.fileIter.getFile().getPath() :
-            this.zipIter.getEntry().getName();
+        return this.zipIter == null ? this.fileIter.getFile().getPath() : this.zipIter.getEntry().getName();
     }
 
     /**
@@ -88,37 +86,43 @@ public class ClassFileIterator implements ClassIterator {
      * ZIP File Entry.
      */
     @Override
-    public boolean isFile() {
+    public
+    boolean isFile() {
         return this.isFile;
     }
 
     /**
      * Return the next Java ClassFile as an {@code InputStream}.
-     * <p>
+     * <p/>
      * NOTICE: Client code MUST close the returned {@code InputStream}!
      */
     @Override
-    public InputStream next(final FilenameFilter filter) throws IOException {
+    public
+    InputStream next(final FilenameFilter filter) throws IOException {
         while (true) {
             if (this.zipIter == null) {
                 final File file = this.fileIter.next();
                 if (file == null) {
                     return null;
-                } else {
+                }
+                else {
                     final String path = file.getPath();
-                    if (path.endsWith(".class") && (filter == null ||
-                        filter.accept(this.fileIter.getRootFile(), this.fileIter.relativize(path)))) {
+                    if (path.endsWith(".class") && (filter == null || filter.accept(this.fileIter.getRootFile(), this.fileIter.relativize(
+                                    path)))) {
                         this.isFile = true;
                         return new FileInputStream(file);
-                    } else if (this.fileIter.isRootFile() && endsWithIgnoreCase(path, ".jar")) {
+                    }
+                    else if (this.fileIter.isRootFile() && endsWithIgnoreCase(path, ".jar")) {
                         this.zipIter = new ZipFileIterator(file, this.pkgNameFilter);
                     } // else just ignore
                 }
-            } else {
+            }
+            else {
                 final InputStream is = this.zipIter.next(filter);
                 if (is == null) {
                     this.zipIter = null;
-                } else {
+                }
+                else {
                     this.isFile = false;
                     return is;
                 }
@@ -128,7 +132,8 @@ public class ClassFileIterator implements ClassIterator {
 
     // private
 
-    private static boolean endsWithIgnoreCase(final String value, final String suffix) {
+    private static
+    boolean endsWithIgnoreCase(final String value, final String suffix) {
         final int n = suffix.length();
         return value.regionMatches(true, value.length() - n, suffix, 0, n);
     }

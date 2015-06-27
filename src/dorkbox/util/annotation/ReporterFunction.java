@@ -24,12 +24,12 @@ package dorkbox.util.annotation;
 /**
  * {@code ReporterFunction} is  used to report the detected annotations.
  *
- * @see Builder#collect(dorkbox.util.annotation.ReporterFunction)
- *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
+ * @see Builder#collect(dorkbox.util.annotation.ReporterFunction)
  * @since annotation-detector 3.1.0
  */
-public interface ReporterFunction<T> {
+public
+interface ReporterFunction<T> {
 
     /**
      * This method is called when an {@code Annotation} is detected.

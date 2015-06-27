@@ -21,11 +21,9 @@
  */
 package dorkbox.util.annotation;
 
-import java.io.DataInput;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
@@ -35,29 +33,18 @@ import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.slf4j.LoggerFactory;
+import java.util.*;
 
 /**
  * {@code AnnotationDetector} reads Java Class Files ("*.class") and reports the
  * found annotations via a simple, developer friendly API.
- * <p>
+ * <p/>
  * A Java Class File consists of a stream of 8-bit bytes. All 16-bit, 32-bit, and 64-bit
  * quantities are constructed by reading in two, four, and eight consecutive 8-bit
  * bytes, respectively. Multi byte data items are always stored in big-endian order,
  * where the high bytes come first. In the Java platforms, this format is
  * supported by interfaces {@link java.io.DataInput} and {@link java.io.DataOutput}.
- * <p>
+ * <p/>
  * A class file consists of a single ClassFile structure:
  * <pre>
  * ClassFile {
@@ -97,7 +84,7 @@ import org.slf4j.LoggerFactory;
  * <li><a href="http://stackoverflow.com/questions/259140">scanning java annotations at
  * runtime</a>.
  * </ul>
- * <p>
+ * <p/>
  * Similar projects / libraries:
  * <ul>
  * <li><a href="http://community.jboss.org/wiki/MCScanninglib">JBoss MC Scanning lib</a>;
@@ -108,18 +95,19 @@ import org.slf4j.LoggerFactory;
  * Available from maven: {@code tv.cntt:annovention:1.2};
  * <li>If using the Spring Framework, use {@code ClassPathScanningCandidateComponentProvider}
  * </ul>
- * <p>
+ * <p/>
  * All above mentioned projects make use of a byte code manipulation library (like BCEL,
  * ASM or Javassist).
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-public final class AnnotationDetector implements Builder, Cursor {
+public final
+class AnnotationDetector implements Builder, Cursor {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(AnnotationDetector.class);
 
-    // Constant Pool type tags
+    // Constant Pool type ta gs
     private static final int CP_UTF8 = 1;
     private static final int CP_INTEGER = 3;
     private static final int CP_FLOAT = 4;
@@ -180,18 +168,20 @@ public final class AnnotationDetector implements Builder, Cursor {
     // "(Ljava/lang/String;II)I"  String, int, int as arguments, return type int
     private String methodDescriptor;
 
-    private AnnotationDetector(ClassLoader loader, final File[] filesOrDirectories, ClassIterator iterator, final String[] pkgNameFilter) {
+    private
+    AnnotationDetector(ClassLoader loader, final File[] filesOrDirectories, ClassIterator iterator, final String[] pkgNameFilter) {
         this.loader = loader;
         if (iterator == null) {
             this.cfIterator = new ClassFileIterator(filesOrDirectories, pkgNameFilter);
 
             if (filesOrDirectories.length == 0) {
                 LOG.warn("No files or directories to scan!");
-            } else if (LOG.isTraceEnabled()) {
-                LOG.trace("Files and root directories scanned:\n{}",
-                    Arrays.toString(filesOrDirectories).replace(", ", "\n"));
             }
-        } else {
+            else if (LOG.isTraceEnabled()) {
+                LOG.trace("Files and root directories scanned:\n{}", Arrays.toString(filesOrDirectories).replace(", ", "\n"));
+            }
+        }
+        else {
             this.cfIterator = iterator;
 
             if (LOG.isTraceEnabled()) {
@@ -206,8 +196,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * Only scan Class Files in the specified packages. If nothing is specified, all classes
      * on the class path are scanned.
      */
-    public static Builder scanClassPath(final String... packageNames)
-        throws IOException {
+    public static
+    Builder scanClassPath(final String... packageNames) throws IOException {
 
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
         return scanClassPath(loader, packageNames);
@@ -218,8 +208,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * Only scan Class Files in the specified packages. If nothing is specified, all classes
      * on the class path are scanned.
      */
-    public static Builder scanClassPath(ClassLoader loader, final String... packageNames)
-        throws IOException {
+    public static
+    Builder scanClassPath(ClassLoader loader, final String... packageNames) throws IOException {
 
         final String[] pkgNameFilter;
 
@@ -259,7 +249,8 @@ public final class AnnotationDetector implements Builder, Cursor {
             }
 
             return new AnnotationDetector(loader, null, new CustomClassloaderIterator(fileNames, packageNames), pkgNameFilter);
-        } else {
+        }
+        else {
             final Set<File> files = new HashSet<File>();
 
             if (packageNames.length == 0) {
@@ -268,7 +259,8 @@ public final class AnnotationDetector implements Builder, Cursor {
                 for (int i = 0; i < fileNames.length; ++i) {
                     files.add(new File(fileNames[i]));
                 }
-            } else {
+            }
+            else {
                 pkgNameFilter = new String[packageNames.length];
                 for (int i = 0; i < pkgNameFilter.length; ++i) {
                     pkgNameFilter[i] = packageNames[i].replace('.', '/');
@@ -288,7 +280,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * Factory method, starting point for the fluent interface.
      * Scan all files specified by the classFileIterator.
      */
-    public static Builder scan(ClassLoader loader, final ClassIterator iterator) {
+    public static
+    Builder scan(ClassLoader loader, final ClassIterator iterator) {
         return new AnnotationDetector(loader, null, iterator, null);
     }
 
@@ -296,7 +289,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * Factory method, starting point for the fluent interface.
      * Scan all files in the specified jar files and directories.
      */
-    public static Builder scanFiles(ClassLoader loader, final File... filesOrDirectories) {
+    public static
+    Builder scanFiles(ClassLoader loader, final File... filesOrDirectories) {
         return new AnnotationDetector(loader, filesOrDirectories, null, null);
     }
 
@@ -304,7 +298,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * Factory method, starting point for the fluent interface.
      * Scan all files in the specified jar files and directories.
      */
-    public static Builder scanFiles(final File... filesOrDirectories) {
+    public static
+    Builder scanFiles(final File... filesOrDirectories) {
         return new AnnotationDetector(Thread.currentThread().getContextClassLoader(), filesOrDirectories, null, null);
     }
 
@@ -312,7 +307,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Builder#forAnnotations(java.lang.Class...) }.
      */
     @Override
-    public Builder forAnnotations(final Class<? extends Annotation> annotation) {
+    public
+    Builder forAnnotations(final Class<? extends Annotation> annotation) {
         this.annotations = new HashMap<String, Class<? extends Annotation>>(1);
         // map "raw" type names to Class object
         this.annotations.put("L" + annotation.getName().replace('.', '/') + ";", annotation);
@@ -324,7 +320,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Builder forAnnotations(final Class<? extends Annotation>... annotations) {
+    public
+    Builder forAnnotations(final Class<? extends Annotation>... annotations) {
         this.annotations = new HashMap<String, Class<? extends Annotation>>(annotations.length);
         // map "raw" type names to Class object
         for (int i = 0; i < annotations.length; ++i) {
@@ -337,7 +334,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Builder#on(java.lang.annotation.ElementType...)  }.
      */
     @Override
-    public Builder on(final ElementType type) {
+    public
+    Builder on(final ElementType type) {
         if (type == null) {
             throw new IllegalArgumentException("At least one Element Type must be specified");
         }
@@ -359,7 +357,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Builder#on(java.lang.annotation.ElementType...)  }.
      */
     @Override
-    public Builder on(final ElementType... types) {
+    public
+    Builder on(final ElementType... types) {
         if (types.length == 0) {
             throw new IllegalArgumentException("At least one Element Type must be specified");
         }
@@ -383,7 +382,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Builder#filter(java.io.FilenameFilter) }.
      */
     @Override
-    public Builder filter(final FilenameFilter filter) {
+    public
+    Builder filter(final FilenameFilter filter) {
         if (filter == null) {
             throw new NullPointerException("'filter' may not be null");
         }
@@ -395,7 +395,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Builder#report(dorkbox.util.annotation.AnnotationDetector.Reporter) }.
      */
     @Override
-    public void report(final Reporter reporter) throws IOException {
+    public
+    void report(final Reporter reporter) throws IOException {
         this.reporter = reporter;
         detect(this.cfIterator);
     }
@@ -404,12 +405,14 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Builder#collect(dorkbox.util.annotation.AnnotationDetector.ReporterFunction) }.
      */
     @Override
-    public <T> List<T> collect(final ReporterFunction<T> reporter) throws IOException {
+    public
+    <T> List<T> collect(final ReporterFunction<T> reporter) throws IOException {
         final List<T> list = new ArrayList<T>();
         this.reporter = new Reporter() {
 
             @Override
-            public void report(Cursor cursor) {
+            public
+            void report(Cursor cursor) {
                 list.add(reporter.report(cursor));
             }
 
@@ -422,7 +425,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Cursor#getTypeName() }.
      */
     @Override
-    public String getTypeName() {
+    public
+    String getTypeName() {
         return this.typeName.replace('/', '.');
     }
 
@@ -430,7 +434,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Cursor#getAnnotationType() }.
      */
     @Override
-    public Class<? extends Annotation> getAnnotationType() {
+    public
+    Class<? extends Annotation> getAnnotationType() {
         return this.annotationType;
     }
 
@@ -438,7 +443,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Cursor#getElementType() }.
      */
     @Override
-    public ElementType getElementType() {
+    public
+    ElementType getElementType() {
         return this.elementType;
     }
 
@@ -446,7 +452,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Cursor#getMemberName() }.
      */
     @Override
-    public String getMemberName() {
+    public
+    String getMemberName() {
         return this.memberName;
     }
 
@@ -454,7 +461,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Cursor#getType() }.
      */
     @Override
-    public Class<?> getType() {
+    public
+    Class<?> getType() {
         return loadClass(this.loader, getTypeName());
     }
 
@@ -462,16 +470,15 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Cursor#getField() }.
      */
     @Override
-    public Field getField() {
+    public
+    Field getField() {
         if (this.elementType != ElementType.FIELD) {
-            throw new IllegalStateException(
-                "Illegal to call getField() when " + this.elementType + " is reported");
+            throw new IllegalStateException("Illegal to call getField() when " + this.elementType + " is reported");
         }
         try {
             return getType().getDeclaredField(this.memberName);
         } catch (NoSuchFieldException ex) {
-            throw assertionError(
-                "Cannot find Field '%s' for type %s", this.memberName, getTypeName());
+            throw assertionError("Cannot find Field '%s' for type %s", this.memberName, getTypeName());
         }
     }
 
@@ -479,17 +486,16 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Cursor#getConstructor() }.
      */
     @Override
-    public Constructor<?> getConstructor() {
+    public
+    Constructor<?> getConstructor() {
         if (this.elementType != ElementType.CONSTRUCTOR) {
-            throw new IllegalStateException(
-                "Illegal to call getMethod() when " + this.elementType + " is reported");
+            throw new IllegalStateException("Illegal to call getMethod() when " + this.elementType + " is reported");
         }
         try {
             final Class<?>[] parameterTypes = parseArguments(this.methodDescriptor);
             return getType().getConstructor(parameterTypes);
         } catch (NoSuchMethodException ex) {
-            throw assertionError(
-                "Cannot find Contructor '%s(...)' for type %s", this.memberName, getTypeName());
+            throw assertionError("Cannot find Contructor '%s(...)' for type %s", this.memberName, getTypeName());
         }
     }
 
@@ -497,17 +503,16 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Cursor#getMethod() }.
      */
     @Override
-    public Method getMethod() {
+    public
+    Method getMethod() {
         if (this.elementType != ElementType.METHOD) {
-            throw new IllegalStateException(
-                "Illegal to call getMethod() when " + this.elementType + " is reported");
+            throw new IllegalStateException("Illegal to call getMethod() when " + this.elementType + " is reported");
         }
         try {
             final Class<?>[] parameterTypes = parseArguments(this.methodDescriptor);
             return getType().getDeclaredMethod(this.memberName, parameterTypes);
         } catch (NoSuchMethodException ex) {
-            throw assertionError(
-                "Cannot find Method '%s(...)' for type %s", this.memberName, getTypeName());
+            throw assertionError("Cannot find Method '%s(...)' for type %s", this.memberName, getTypeName());
         }
     }
 
@@ -515,10 +520,11 @@ public final class AnnotationDetector implements Builder, Cursor {
      * See {@link Cursor#getAnnotation(java.lang.Class) }.
      */
     @Override
-    public <T extends Annotation> T getAnnotation(final Class<T> annotationClass) {
+    public
+    <T extends Annotation> T getAnnotation(final Class<T> annotationClass) {
         if (!annotationClass.equals(this.annotationType)) {
             throw new IllegalStateException("Illegal to call getAnnotation() when " +
-                this.annotationType.getName() + " is reported");
+                                            this.annotationType.getName() + " is reported");
         }
         final AnnotatedElement ae;
         switch (this.elementType) {
@@ -539,8 +545,8 @@ public final class AnnotationDetector implements Builder, Cursor {
 
     // private
 
-    private static void addFiles(ClassLoader loader, String resourceName, Set<File> files)
-        throws IOException {
+    private static
+    void addFiles(ClassLoader loader, String resourceName, Set<File> files) throws IOException {
 
         final Enumeration<URL> resourceEnum = loader.getResources(resourceName);
         while (resourceEnum.hasMoreElements()) {
@@ -557,7 +563,8 @@ public final class AnnotationDetector implements Builder, Cursor {
                 final File dir = toFile(url);
                 if (dir.isDirectory()) {
                     files.add(dir);
-                } else if (isVfs) {
+                }
+                else if (isVfs) {
                     //Jar file via JBoss VFS protocol - strip package name
                     String jarPath = dir.getPath();
                     final int idx = jarPath.indexOf(".jar");
@@ -568,23 +575,26 @@ public final class AnnotationDetector implements Builder, Cursor {
                             files.add(jarFile);
                         }
                     }
-                } else {
+                }
+                else {
                     throw assertionError("Not a recognized file URL: %s", url);
                 }
-            } else {
+            }
+            else {
                 // Resource in Jar File
-                final File jarFile =
-                    toFile(((JarURLConnection)url.openConnection()).getJarFileURL());
+                final File jarFile = toFile(((JarURLConnection) url.openConnection()).getJarFileURL());
                 if (jarFile.isFile()) {
                     files.add(jarFile);
-                } else {
+                }
+                else {
                     throw assertionError("Not a File: %s", jarFile);
                 }
             }
         }
     }
 
-    private static File toFile(final URL url) throws IOException {
+    private static
+    File toFile(final URL url) throws IOException {
         // only correct way to convert the URL to a File object, also see issue #16
         // Do not use URLDecoder
         try {
@@ -594,7 +604,8 @@ public final class AnnotationDetector implements Builder, Cursor {
         }
     }
 
-    private void detect(final ClassIterator iterator) throws IOException {
+    private
+    void detect(final ClassIterator iterator) throws IOException {
         InputStream stream;
         boolean mustEndInClass = iterator instanceof ClassFileIterator;
         while ((stream = iterator.next(this.filter)) != null) {
@@ -620,14 +631,16 @@ public final class AnnotationDetector implements Builder, Cursor {
         }
     }
 
-    private boolean hasCafebabe(final ClassFileBuffer buffer) throws IOException {
-        return buffer.size() > 4 &&  buffer.readInt() == 0xCAFEBABE;
+    private
+    boolean hasCafebabe(final ClassFileBuffer buffer) throws IOException {
+        return buffer.size() > 4 && buffer.readInt() == 0xCAFEBABE;
     }
 
     /**
      * Inspect the given (Java) class file in streaming mode.
      */
-    private void read(final DataInput di) throws IOException {
+    private
+    void read(final DataInput di) throws IOException {
         readVersion(di);
         readConstantPoolEntries(di);
         readAccessFlags(di);
@@ -639,18 +652,21 @@ public final class AnnotationDetector implements Builder, Cursor {
         readAttributes(di, ElementType.TYPE);
     }
 
-    private void readVersion(final DataInput di) throws IOException {
+    private
+    void readVersion(final DataInput di) throws IOException {
         // sequence: minor version, major version (argument_index is 1-based)
         if (LOG.isTraceEnabled()) {
             int minor = di.readUnsignedShort();
             int maj = di.readUnsignedShort();
             LOG.trace("Java Class version {}.{}", maj, minor);
-        } else {
+        }
+        else {
             di.skipBytes(4);
         }
     }
 
-    private void readConstantPoolEntries(final DataInput di) throws IOException {
+    private
+    void readConstantPoolEntries(final DataInput di) throws IOException {
         final int count = di.readUnsignedShort();
         this.constantPool = new Object[count];
         for (int i = 1; i < count; ++i) {
@@ -664,8 +680,8 @@ public final class AnnotationDetector implements Builder, Cursor {
     /**
      * Return {@code true} if a double slot is read (in case of Double or Long constant).
      */
-    private boolean readConstantPoolEntry(final DataInput di, final int index)
-        throws IOException {
+    private
+    boolean readConstantPoolEntry(final DataInput di, final int index) throws IOException {
 
         final int tag = di.readUnsignedByte();
         switch (tag) {
@@ -697,29 +713,33 @@ public final class AnnotationDetector implements Builder, Cursor {
                 this.constantPool[index] = di.readUnsignedShort();
                 return false;
             default:
-                throw new ClassFormatError(
-                    "Unkown tag value for constant pool entry: " + tag);
+                throw new ClassFormatError("Unkown tag value for constant pool entry: " + tag);
         }
     }
 
-    private void readAccessFlags(final DataInput di) throws IOException {
+    private
+    void readAccessFlags(final DataInput di) throws IOException {
         di.skipBytes(2); // u2
     }
 
-    private void readThisClass(final DataInput di) throws IOException {
+    private
+    void readThisClass(final DataInput di) throws IOException {
         this.typeName = resolveUtf8(di);
     }
 
-    private void readSuperClass(final DataInput di) throws IOException {
+    private
+    void readSuperClass(final DataInput di) throws IOException {
         di.skipBytes(2); // u2
     }
 
-    private void readInterfaces(final DataInput di) throws IOException {
+    private
+    void readInterfaces(final DataInput di) throws IOException {
         final int count = di.readUnsignedShort();
         di.skipBytes(count * 2); // count * u2
     }
 
-    private void readFields(final DataInput di) throws IOException {
+    private
+    void readFields(final DataInput di) throws IOException {
         final int count = di.readUnsignedShort();
         for (int i = 0; i < count; ++i) {
             readAccessFlags(di);
@@ -732,7 +752,8 @@ public final class AnnotationDetector implements Builder, Cursor {
         }
     }
 
-    private void readMethods(final DataInput di) throws IOException {
+    private
+    void readMethods(final DataInput di) throws IOException {
         final int count = di.readUnsignedShort();
         for (int i = 0; i < count; ++i) {
             readAccessFlags(di);
@@ -743,28 +764,28 @@ public final class AnnotationDetector implements Builder, Cursor {
         }
     }
 
-    private void readAttributes(final DataInput di, final ElementType reporterType)
-        throws IOException {
+    private
+    void readAttributes(final DataInput di, final ElementType reporterType) throws IOException {
 
         final int count = di.readUnsignedShort();
         for (int i = 0; i < count; ++i) {
             final String name = resolveUtf8(di);
             // in bytes, use this to skip the attribute info block
             final int length = di.readInt();
-            if (this.elementTypes.contains(reporterType) &&
-                ("RuntimeVisibleAnnotations".equals(name) ||
-                "RuntimeInvisibleAnnotations".equals(name))) {
+            if (this.elementTypes.contains(reporterType) && ("RuntimeVisibleAnnotations".equals(name) ||
+                                                             "RuntimeInvisibleAnnotations".equals(name))) {
                 LOG.trace("Attribute: {}", name);
                 readAnnotations(di, reporterType);
-            } else {
+            }
+            else {
                 LOG.trace("Attribute: {} (ignored)", name);
                 di.skipBytes(length);
             }
         }
     }
 
-    private void readAnnotations(final DataInput di, final ElementType elementType)
-        throws IOException {
+    private
+    void readAnnotations(final DataInput di, final ElementType elementType) throws IOException {
 
         // the number of Runtime(In)VisibleAnnotations
         final int count = di.readUnsignedShort();
@@ -775,21 +796,23 @@ public final class AnnotationDetector implements Builder, Cursor {
                 LOG.trace("Annotation: {} (ignored)", rawTypeName);
                 continue;
             }
-            LOG.trace("Annotation: ''{}'' on type ''{}'', member ''{}'' (reported)",
-                this.annotationType.getName(), getTypeName(), getMemberName());
+            LOG.trace("Annotation: ''{}'' on type ''{}'', member ''{}'' (reported)", this.annotationType.getName(), getTypeName(),
+                      getMemberName());
             this.elementType = elementType;
             this.reporter.report(this);
         }
     }
 
-    private String readAnnotation(final DataInput di) throws IOException {
+    private
+    String readAnnotation(final DataInput di) throws IOException {
         final String rawTypeName = resolveUtf8(di);
         // num_element_value_pairs
         final int count = di.readUnsignedShort();
         for (int i = 0; i < count; ++i) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Anntotation Element: {}", resolveUtf8(di));
-            } else {
+            }
+            else {
                 di.skipBytes(2);
             }
             readAnnotationElementValue(di);
@@ -797,7 +820,8 @@ public final class AnnotationDetector implements Builder, Cursor {
         return rawTypeName;
     }
 
-    private void readAnnotationElementValue(final DataInput di) throws IOException {
+    private
+    void readAnnotationElementValue(final DataInput di) throws IOException {
         final int tag = di.readUnsignedByte();
         switch (tag) {
             case BYTE:
@@ -827,8 +851,7 @@ public final class AnnotationDetector implements Builder, Cursor {
                 }
                 break;
             default:
-                throw new ClassFormatError("Not a valid annotation element type tag: 0x" +
-                    Integer.toHexString(tag));
+                throw new ClassFormatError("Not a valid annotation element type tag: 0x" + Integer.toHexString(tag));
         }
     }
 
@@ -836,14 +859,16 @@ public final class AnnotationDetector implements Builder, Cursor {
      * Look up the String value, identified by the u2 index value from constant pool
      * (direct or indirect).
      */
-    private String resolveUtf8(final DataInput di) throws IOException {
+    private
+    String resolveUtf8(final DataInput di) throws IOException {
         final int index = di.readUnsignedShort();
         final Object value = this.constantPool[index];
         final String s;
         if (value instanceof Integer) {
-            s = (String)this.constantPool[(Integer)value];
-        } else {
-            s = (String)value;
+            s = (String) this.constantPool[(Integer) value];
+        }
+        else {
+            s = (String) value;
         }
         return s;
     }
@@ -854,7 +879,8 @@ public final class AnnotationDetector implements Builder, Cursor {
      */
     // incorrect detection of dereferencing possible null pointer
     // TODO: https://github.com/checkstyle/checkstyle/issues/14 fixed in 5.8?
-    private Class<?>[] parseArguments(final String descriptor) {
+    private
+    Class<?>[] parseArguments(final String descriptor) {
         final int n = descriptor.length();
         // "minimal" descriptor: no arguments: "()V", first character is always '('
         if (n < 3 || descriptor.charAt(0) != '(') {
@@ -866,7 +892,8 @@ public final class AnnotationDetector implements Builder, Cursor {
             if (i == 1) {
                 if (c == ')') {
                     return new Class<?>[0];
-                } else {
+                }
+                else {
                     args = new LinkedList<Class<?>>();
                 }
             }
@@ -929,25 +956,26 @@ public final class AnnotationDetector implements Builder, Cursor {
     /**
      * Load the class, but do not initialize it.
      */
-    private static Class<?> loadClass(ClassLoader loader, final String rawClassName) {
+    private static
+    Class<?> loadClass(ClassLoader loader, final String rawClassName) {
         final String typeName = rawClassName.replace('/', '.');
         try {
             return Class.forName(typeName, false, loader);
         } catch (ClassNotFoundException ex) {
-            throw assertionError(
-                "Cannot load type '%s', scanned file not on class path? (%s)", typeName, ex);
+            throw assertionError("Cannot load type '%s', scanned file not on class path? (%s)", typeName, ex);
         }
     }
 
     /**
      * The method descriptor must always be parseable, so if not an AssertionError is thrown.
      */
-    private static AssertionError unparseable(final String descriptor, final String cause) {
-        return assertionError(
-            "Unparseble method descriptor: '%s' (cause: %s)", descriptor, cause);
+    private static
+    AssertionError unparseable(final String descriptor, final String cause) {
+        return assertionError("Unparseble method descriptor: '%s' (cause: %s)", descriptor, cause);
     }
 
-    private static AssertionError assertionError(String message, Object... args) {
+    private static
+    AssertionError assertionError(String message, Object... args) {
         return new AssertionError(String.format(message, args));
     }
 

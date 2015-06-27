@@ -29,7 +29,7 @@ import java.util.NoSuchElementException;
 /**
  * {@code FileIterator} enables iteration over all files in a directory and all its sub
  * directories.
- * <p>
+ * <p/>
  * Usage:
  * <pre>
  * FileIterator iter = new FileIterator(new File("./src"));
@@ -43,7 +43,8 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-final class FileIterator {
+final
+class FileIterator {
 
     private final Deque<File> stack = new LinkedList<File>();
     private int rootCount;
@@ -52,13 +53,13 @@ final class FileIterator {
 
     /**
      * Create a new {@code FileIterator} using the specified 'filesOrDirectories' as root.
-     * <p>
+     * <p/>
      * If 'filesOrDirectories' contains a file, the iterator just returns that single file.
      * If 'filesOrDirectories' contains a directory, all files in that directory
      * and its sub directories are returned (depth first).
      *
      * @param filesOrDirectories Zero or more {@link File} objects, which are iterated
-     * in the specified order (depth first)
+     *                           in the specified order (depth first)
      */
     FileIterator(final File... filesOrDirectories) {
         addReverse(filesOrDirectories);
@@ -80,12 +81,12 @@ final class FileIterator {
 
     /**
      * Relativize the absolute full (file) 'path' against the current root file.
-     * <p>
+     * <p/>
      * Example:<br/>
      * Let current root be "/path/to/dir".
      * Then {@code relativize("/path/to/dir/with/file.ext")} equals "with/file.ext" (without
      * leading '/').
-     * <p>
+     * <p/>
      * Note: the paths are not canonicalized!
      */
     String relativize(final String path) {
@@ -115,7 +116,8 @@ final class FileIterator {
         if (this.stack.isEmpty()) {
             this.current = null;
             return null;
-        } else {
+        }
+        else {
             this.current = this.stack.removeLast();
             if (this.current.isDirectory()) {
                 if (this.stack.size() < this.rootCount) {
@@ -124,7 +126,8 @@ final class FileIterator {
                 }
                 addReverse(this.current.listFiles());
                 return next();
-            } else {
+            }
+            else {
                 return this.current;
             }
         }
@@ -135,7 +138,8 @@ final class FileIterator {
     /**
      * Add the specified files in reverse order.
      */
-    private void addReverse(final File[] files) {
+    private
+    void addReverse(final File[] files) {
         for (int i = files.length - 1; i >= 0; --i) {
             this.stack.add(files[i]);
         }

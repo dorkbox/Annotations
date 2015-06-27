@@ -31,13 +31,14 @@ import java.io.InputStream;
 /**
  * {@code ClassFileIterator} is used to iterate over all Java ClassFile files available within
  * a specific context.
- * <p>
+ * <p/>
  * For every Java ClassFile ({@code .class}) an {@link InputStream} is returned.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-public interface ClassIterator {
+public
+interface ClassIterator {
 
     /**
      * Return the name of the Java ClassFile returned from the last call to {@link #next()}.
@@ -55,7 +56,7 @@ public interface ClassIterator {
 
     /**
      * Return the next Java ClassFile as an {@code InputStream}.
-     * <p>
+     * <p/>
      * NOTICE: Client code MUST close the returned {@code InputStream}!
      */
     InputStream next(final FilenameFilter filter) throws IOException;

@@ -33,7 +33,8 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.1.0
  */
-public interface Cursor {
+public
+interface Cursor {
 
     /**
      * Return the type name of the currently reported Java Class File.

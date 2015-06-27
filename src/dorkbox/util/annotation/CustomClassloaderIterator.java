@@ -15,6 +15,8 @@
  */
 package dorkbox.util.annotation;
 
+import dorkbox.util.FileUtil;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -26,17 +28,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import dorkbox.util.FileUtil;
+public
+class CustomClassloaderIterator implements ClassIterator {
 
-public class CustomClassloaderIterator implements ClassIterator {
-
-    private volatile Iterator<URL> loaderFilesIterator;
+    private final Iterator<URL> loaderFilesIterator;
     private ClassFileIterator classFileIterator;
 
     // have to support
     // 1 - scanning the classpath
     // 2 - scanning a specific package
-    public CustomClassloaderIterator(List<URL> fileNames, String[] packageNames) throws IOException {
+    public
+    CustomClassloaderIterator(List<URL> fileNames, String[] packageNames) throws IOException {
         // if ANY of our filenames DO NOT start with "box", we have to add it as a file, so our iterator picks it up (and if dir, it's childred)
 
         Set<File> files = new HashSet<File>();
@@ -56,7 +58,8 @@ public class CustomClassloaderIterator implements ClassIterator {
 
         if (files.isEmpty()) {
             this.classFileIterator = null;
-        } else {
+        }
+        else {
             this.classFileIterator = new ClassFileIterator(files.toArray(new File[0]), packageNames);
         }
 
@@ -65,13 +68,15 @@ public class CustomClassloaderIterator implements ClassIterator {
     }
 
     @Override
-    public String getName() {
+    public
+    String getName() {
         // not needed
         return null;
     }
 
     @Override
-    public boolean isFile() {
+    public
+    boolean isFile() {
         if (this.classFileIterator != null) {
             return this.classFileIterator.isFile();
         }
@@ -80,13 +85,15 @@ public class CustomClassloaderIterator implements ClassIterator {
     }
 
     @Override
-    public InputStream next(FilenameFilter filter) throws IOException {
+    public
+    InputStream next(FilenameFilter filter) throws IOException {
         if (this.classFileIterator != null) {
             while (true) {
                 InputStream next = this.classFileIterator.next(filter);
                 if (next == null) {
                     this.classFileIterator = null;
-                } else {
+                }
+                else {
                     String name = this.classFileIterator.getName();
                     if (name.endsWith(".class")) {
                         return next;

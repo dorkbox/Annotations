@@ -34,7 +34,8 @@ import java.util.List;
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.1.0
  */
-public interface Builder {
+public
+interface Builder {
 
     /**
      * Specify the annotation types to report.
@@ -51,7 +52,7 @@ public interface Builder {
     /**
      * Specify the Element Types to scan. If this method is not called,
      * {@link ElementType#TYPE} is used as default.
-     * <p>
+     * <p/>
      * Valid types are:
      * <ul>
      * <li>{@link ElementType#TYPE}
@@ -66,7 +67,7 @@ public interface Builder {
     /**
      * Specify the Element Types to scan. If this method is not called,
      * {@link ElementType#TYPE} is used as default.
-     * <p>
+     * <p/>
      * Valid types are:
      * <ul>
      * <li>{@link ElementType#TYPE}
@@ -81,18 +82,18 @@ public interface Builder {
     /**
      * Filter the scanned Class Files based on its name and the directory or jar file it is
      * stored.
-     * <p>
+     * <p/>
      * If the Class File is stored as a single file in the file system the {@code File}
      * argument in {@link FilenameFilter#accept(java.io.File, java.lang.String) } is the
      * absolute path to the root directory scanned.
-     * <p>
+     * <p/>
      * If the Class File is stored in a jar file the {@code File} argument in
      * {@link FilenameFilter#accept(java.io.File, java.lang.String)} is the absolute path of
      * the jar file.
-     * <p>
+     * <p/>
      * The {@code String} argument is the full name of the ClassFile in native format,
      * including package name, like {@code eu/infomas/annotation/AnnotationDetector$1.class}.
-     * <p>
+     * <p/>
      * Note that all non-Class Files are already filtered and not seen by the filter.
      *
      * @param filter The filter, never {@code null}

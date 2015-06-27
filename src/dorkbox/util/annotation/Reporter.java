@@ -24,22 +24,21 @@ package dorkbox.util.annotation;
 
 /**
  * {@code Reporter} is used to report the detected annotations.
- * <p>
+ * <p/>
  * This interface is a so called "Single Abstract Method" (SAM) or "Functional Interface", so
  * can be used as a Lambda in Java 8 (see examples).
  *
- * @see Builder#report(dorkbox.util.annotation.Reporter)
- *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
+ * @see Builder#report(dorkbox.util.annotation.Reporter)
  * @since annotation-detector 3.1.0
  */
-public interface Reporter {
+public
+interface Reporter {
 
     /**
      * This method is called when an {@code Annotation} is detected. Invoke methods on the
      * provided {@code Cursor} reference to get more specific information about the
      * {@code Annotation}.
-     *
      */
     void report(Cursor cursor);
 
