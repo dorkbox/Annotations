@@ -38,7 +38,7 @@ Or if you don't want to use Maven, you can access the files directly here:
 https://oss.sonatype.org/content/repositories/releases/com/dorkbox/Annotations/
 https://oss.sonatype.org/content/repositories/releases/com/dorkbox/Annotations-Dorkbox-Util/
 
-
+https://repo1.maven.org/maven2/org/slf4j/slf4j-api/
 
 ``` java
 try {
