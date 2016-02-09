@@ -49,8 +49,13 @@ This project is **kept in sync** with the utilities library, so "jar hell" is no
 ```
 
 Or if you don't want to use Maven, you can access the files directly here:  
-https://oss.sonatype.org/content/repositories/releases/com/dorkbox/Annotations/
+https://oss.sonatype.org/content/repositories/releases/com/dorkbox/Annotations/  
 https://oss.sonatype.org/content/repositories/releases/com/dorkbox/Annotations-Dorkbox-Util/  
 
 
 https://repo1.maven.org/maven2/org/slf4j/slf4j-api/
+
+
+<h2>License</h2>
+
+This project is distributed under the terms of the Apache v2.0 License. See file "LICENSE" for further references.
