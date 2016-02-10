@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.util.annotation;
+package dorkbox.annotation;
 
 import dorkbox.util.FileUtil;
 
@@ -28,6 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author dorkbox, llc
+ */
 public
 class CustomClassloaderIterator implements ClassIterator {
 
@@ -39,7 +42,8 @@ class CustomClassloaderIterator implements ClassIterator {
     // 2 - scanning a specific package
     public
     CustomClassloaderIterator(List<URL> fileNames, String[] packageNames) throws IOException {
-        // if ANY of our filenames DO NOT start with "box", we have to add it as a file, so our iterator picks it up (and if dir, it's childred)
+        // if ANY of our filenames DO NOT start with "box", we have to add it as a file, so our iterator picks it up (and if dir, it's
+        // children)
 
         Set<File> files = new HashSet<File>();
         Iterator<URL> iterator = fileNames.iterator();

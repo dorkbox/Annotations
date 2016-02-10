@@ -1,4 +1,4 @@
-/* Reporter.java
+/* ReporterFunction.java
  *
  * Created: 2014-06-15 (Year-Month-Day)
  * Character encoding: UTF-8
@@ -19,27 +19,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.util.annotation;
-
+package dorkbox.annotation;
 
 /**
- * {@code Reporter} is used to report the detected annotations.
- * <p/>
- * This interface is a so called "Single Abstract Method" (SAM) or "Functional Interface", so
- * can be used as a Lambda in Java 8 (see examples).
+ * {@code ReporterFunction} is  used to report the detected annotations.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- * @see Builder#report(dorkbox.util.annotation.Reporter)
+ * @see Builder#collect(ReporterFunction)
  * @since annotation-detector 3.1.0
  */
 public
-interface Reporter {
+interface ReporterFunction<T> {
 
     /**
-     * This method is called when an {@code Annotation} is detected. Invoke methods on the
-     * provided {@code Cursor} reference to get more specific information about the
+     * This method is called when an {@code Annotation} is detected.
+     * Invoke methods on the {@code Cursor} to get more specific information about the
      * {@code Annotation}.
      */
-    void report(Cursor cursor);
-
+    T report(Cursor cursor);
 }

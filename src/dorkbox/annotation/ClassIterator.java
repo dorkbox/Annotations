@@ -21,7 +21,7 @@
  *
  * Modified 2014, dorkbox, llc
  */
-package dorkbox.util.annotation;
+package dorkbox.annotation;
 
 import java.io.File;
 import java.io.FilenameFilter;

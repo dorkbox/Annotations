@@ -6,6 +6,7 @@
  ****************************************** LICENSE *******************************************
  *
  * Copyright (c) 2011 - 2013 XIAM Solutions B.V. (http://www.xiam.nl)
+ * Copyright 2014 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +19,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
-package dorkbox.util.annotation;
+package dorkbox.annotation;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -39,6 +41,8 @@ import java.util.zip.ZipFile;
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
+ *
+ * @author dorkbox, llc
  */
 final
 class ZipFileIterator {
@@ -53,7 +57,7 @@ class ZipFileIterator {
     /**
      * Create a new {@code ZipFileIterator} instance.
      *
-     * @param zipFile         The ZIP file used to iterate over all entries
+     * @param file         The ZIP file used to iterate over all entries
      * @param entryNameFilter (optional) file name filter. Only entry names starting with
      *                        one of the specified names in the filter are returned
      */

@@ -6,6 +6,7 @@
  ****************************************** LICENSE *******************************************
  *
  * Copyright (c) 2014 XIAM Solutions B.V. (http://www.xiam.nl)
+ * Copyright 2014 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.util.annotation;
+package dorkbox.annotation;
 
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -33,6 +34,8 @@ import java.util.List;
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.1.0
+ *
+ * @author dorkbox, llc
  */
 public
 interface Builder {
@@ -47,7 +50,6 @@ interface Builder {
      * Specify the annotation types to report.
      */
     Builder forAnnotations(Class<? extends Annotation> annotation);
-
 
     /**
      * Specify the Element Types to scan. If this method is not called,
@@ -103,18 +105,18 @@ interface Builder {
     /**
      * Report the detected annotations to the specified {@code Reporter} instance.
      *
-     * @see Reporter#report(dorkbox.util.annotations.Cursor)
-     * @see #collect(dorkbox.util.annotations.ReporterFunction)
+     * @see Reporter#report(Cursor)
+     * @see #collect(ReporterFunction)
      */
     void report(final Reporter reporter) throws IOException;
 
     /**
      * Report the detected annotations to the specified {@code ReporterFunction} instance and
      * collect the returned values of
-     * {@link ReporterFunction#report(dorkbox.util.annotations.Cursor) }.
+     * {@link ReporterFunction#report(Cursor)}.
      * The collected values are returned as a {@code List}.
      *
-     * @see #report(dorkbox.util.annotations.Reporter)
+     * @see #report(Reporter)
      */
     <T> List<T> collect(final ReporterFunction<T> reporter) throws IOException;
 }

@@ -6,6 +6,7 @@
  ****************************************** LICENSE *******************************************
  *
  * Copyright (c) 2011 - 2014 XIAM Solutions B.V. (http://www.xiam.nl)
+ * Copyright 2014 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.util.annotation;
+package dorkbox.annotation;
 
 import org.slf4j.LoggerFactory;
 
@@ -101,6 +102,8 @@ import java.util.*;
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
+ *
+ * @author dorkbox, llc
  */
 public final
 class AnnotationDetector implements Builder, Cursor {
@@ -189,6 +192,14 @@ class AnnotationDetector implements Builder, Cursor {
             }
         }
 
+    }
+
+    /**
+     * Gets the version number.
+     */
+    public static
+    String getVersion() {
+        return "2.0";
     }
 
     /**
@@ -392,7 +403,7 @@ class AnnotationDetector implements Builder, Cursor {
     }
 
     /**
-     * See {@link Builder#report(dorkbox.util.annotation.AnnotationDetector.Reporter) }.
+     * See {@link Builder#report(AnnotationDetector.Reporter) }.
      */
     @Override
     public
@@ -402,7 +413,7 @@ class AnnotationDetector implements Builder, Cursor {
     }
 
     /**
-     * See {@link Builder#collect(dorkbox.util.annotation.AnnotationDetector.ReporterFunction) }.
+     * See {@link Builder#collect(AnnotationDetector.ReporterFunction) }.
      */
     @Override
     public
@@ -980,3 +991,5 @@ class AnnotationDetector implements Builder, Cursor {
     }
 
 }
+
+

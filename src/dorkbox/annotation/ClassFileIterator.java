@@ -6,6 +6,7 @@
  ****************************************** LICENSE *******************************************
  *
  * Copyright (c) 2011 - 2013 XIAM Solutions B.V. (http://www.xiam.nl)
+ * Copyright 2014 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.util.annotation;
+package dorkbox.annotation;
 
 import java.io.*;
 
@@ -31,6 +32,8 @@ import java.io.*;
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
+ *
+ * @author dorkbox, llc
  */
 public
 class ClassFileIterator implements ClassIterator {
