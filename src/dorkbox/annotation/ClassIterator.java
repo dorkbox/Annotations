@@ -23,7 +23,6 @@
  */
 package dorkbox.annotation;
 
-import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +40,7 @@ public
 interface ClassIterator {
 
     /**
-     * Return the name of the Java ClassFile returned from the last call to {@link #next()}.
+     * Return the name of the Java ClassFile returned from the last call to {@link #next(FilenameFilter)}.
      * The name is either the path name of a file or the name of an ZIP/JAR file entry.
      */
     String getName();

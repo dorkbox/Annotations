@@ -43,7 +43,6 @@ interface Builder {
     /**
      * Specify the annotation types to report.
      */
-    @SuppressWarnings("unchecked")
     Builder forAnnotations(final Class<? extends Annotation>... annotations);
 
     /**

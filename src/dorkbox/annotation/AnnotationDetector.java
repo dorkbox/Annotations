@@ -329,7 +329,6 @@ class AnnotationDetector implements Builder, Cursor {
     /**
      * See {@link Builder#forAnnotations(java.lang.Class...) }.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public
     Builder forAnnotations(final Class<? extends Annotation>... annotations) {
