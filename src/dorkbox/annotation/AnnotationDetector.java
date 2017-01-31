@@ -199,7 +199,7 @@ class AnnotationDetector implements Builder, Cursor {
      */
     public static
     String getVersion() {
-        return "2.10";
+        return "2.11";
     }
 
     /**
