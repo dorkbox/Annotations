@@ -22,9 +22,11 @@
  */
 package dorkbox.annotation;
 
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
+import java.io.DataInput;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
@@ -34,7 +36,20 @@ import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.slf4j.LoggerFactory;
+
+import dorkbox.util.Version;
 
 /**
  * {@code AnnotationDetector} reads Java Class Files ("*.class") and reports the
@@ -105,6 +120,7 @@ import java.util.*;
  *
  * @author dorkbox, llc
  */
+@SuppressWarnings("unused")
 public final
 class AnnotationDetector implements Builder, Cursor {
 
@@ -198,8 +214,8 @@ class AnnotationDetector implements Builder, Cursor {
      * Gets the version number.
      */
     public static
-    String getVersion() {
-        return "2.12";
+    Version getVersion() {
+        return new Version("2.12");
     }
 
     /**
@@ -242,7 +258,7 @@ class AnnotationDetector implements Builder, Cursor {
             // scanning specific packages
             else {
                 pkgNameFilter = new String[packageNames.length];
-                for (int i = 0; i < pkgNameFilter.length; ++i) {
+                for (int i = 0; i < pkgNameFilter.length; i++) {
                     pkgNameFilter[i] = packageNames[i].replace('.', '/');
                     if (!pkgNameFilter[i].endsWith("/")) {
                         pkgNameFilter[i] = pkgNameFilter[i].concat("/");
@@ -267,13 +283,13 @@ class AnnotationDetector implements Builder, Cursor {
             if (packageNames.length == 0) {
                 pkgNameFilter = null;
                 final String[] fileNames = System.getProperty("java.class.path").split(File.pathSeparator);
-                for (int i = 0; i < fileNames.length; ++i) {
-                    files.add(new File(fileNames[i]));
+                for (final String fileName : fileNames) {
+                    files.add(new File(fileName));
                 }
             }
             else {
                 pkgNameFilter = new String[packageNames.length];
-                for (int i = 0; i < pkgNameFilter.length; ++i) {
+                for (int i = 0; i < pkgNameFilter.length; i++) {
                     pkgNameFilter[i] = packageNames[i].replace('.', '/');
                     if (!pkgNameFilter[i].endsWith("/")) {
                         pkgNameFilter[i] = pkgNameFilter[i].concat("/");
@@ -334,8 +350,8 @@ class AnnotationDetector implements Builder, Cursor {
     Builder forAnnotations(final Class<? extends Annotation>... annotations) {
         this.annotations = new HashMap<String, Class<? extends Annotation>>(annotations.length);
         // map "raw" type names to Class object
-        for (int i = 0; i < annotations.length; ++i) {
-            this.annotations.put("L" + annotations[i].getName().replace('.', '/') + ";", annotations[i]);
+        for (final Class<? extends Annotation> annotation : annotations) {
+            this.annotations.put("L" + annotation.getName().replace('.', '/') + ";", annotation);
         }
         return this;
     }
@@ -343,6 +359,7 @@ class AnnotationDetector implements Builder, Cursor {
     /**
      * See {@link Builder#on(java.lang.annotation.ElementType...)  }.
      */
+    @SuppressWarnings("Duplicates")
     @Override
     public
     Builder on(final ElementType type) {
@@ -366,6 +383,7 @@ class AnnotationDetector implements Builder, Cursor {
     /**
      * See {@link Builder#on(java.lang.annotation.ElementType...)  }.
      */
+    @SuppressWarnings("Duplicates")
     @Override
     public
     Builder on(final ElementType... types) {
@@ -402,7 +420,7 @@ class AnnotationDetector implements Builder, Cursor {
     }
 
     /**
-     * See {@link Builder#report(AnnotationDetector.Reporter) }.
+     * See {@link Builder#report(Reporter) }.
      */
     @Override
     public
@@ -412,7 +430,7 @@ class AnnotationDetector implements Builder, Cursor {
     }
 
     /**
-     * See {@link Builder#collect(AnnotationDetector.ReporterFunction) }.
+     * See {@link Builder#collect(ReporterFunction) }.
      */
     @Override
     public
@@ -907,7 +925,7 @@ class AnnotationDetector implements Builder, Cursor {
                     args = new LinkedList<Class<?>>();
                 }
             }
-            assert args != null;
+
             int j;
             switch (c) {
                 case 'V':
