@@ -49,8 +49,6 @@ import java.util.Set;
 
 import org.slf4j.LoggerFactory;
 
-import dorkbox.util.Version;
-
 /**
  * {@code AnnotationDetector} reads Java Class Files ("*.class") and reports the
  * found annotations via a simple, developer friendly API.
@@ -214,8 +212,8 @@ class AnnotationDetector implements Builder, Cursor {
      * Gets the version number.
      */
     public static
-    Version getVersion() {
-        return new Version("2.13");
+    String getVersion() {
+        return "2.14";
     }
 
     /**
