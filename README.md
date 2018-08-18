@@ -42,7 +42,7 @@ Release Notes
 
 This project includes some utility classes that are a small subset of a much larger library. These classes are **kept in sync** with the main utilities library, so "jar hell" is not an issue, and the latest release will always include the same version of utility files as all of the other projects in the dorkbox repository at that time. 
   
-  Please note that the utility source code is included in the release and on our [GitHub](https://github.com/dorkbox/Utilities) repository.
+  Please note that the utility source code is included in the release and on our [Git Server](https://git.dorkbox.com/dorkbox/Utilities) repository.
   
   
 Maven Info
@@ -58,11 +58,18 @@ Maven Info
 </dependencies>
 ```
 
+  
+Gradle Info
+---------
+````
+dependencies {
+    ...
+    compile 'com.dorkbox:Annotations:2.14'
+}
+````
+
 Or if you don't want to use Maven, you can access the files directly here:  
-https://oss.sonatype.org/content/repositories/releases/com/dorkbox/Annotations/  
-
-
-https://repo1.maven.org/maven2/org/slf4j/slf4j-api/
+https://repo1.maven.org/maven2/com/dorkbox/Annotations/  
 
 
 License
