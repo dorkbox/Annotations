@@ -1,30 +1,34 @@
-    - Dorkbox Annotations - Apache 2.0 License
-      https://github.com/dorkbox
-      Copyright 2014, dorkbox, llc
-      Copyright 2011 - 2014, XIAM Solutions B.V. (http://www.xiam.nl)
-        Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 6+
+ - Annotations - 
+   https://git.dorkbox.com/dorkbox/Annotations
+   Copyright 2018 - The Apache Software License, Version 2.0
+     dorkbox, llc
+   Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 6+
+   Copyright 2011 - 2014, XIAM Solutions B.V. (http://www.xiam.nl)
 
 
-    - Dorkbox Utils - Apache 2.0 License
-      https://github.com/dorkbox
-      Copyright 2010, dorkbox, llc
+ - Dorkbox Utils - 
+   https://git.dorkbox.com/dorkbox/Utilities
+   Copyright 2018 - The Apache Software License, Version 2.0
+     dorkbox, llc
 
 
-    - FilenameUtils.java (normalize + dependencies) - Apache 2.0 License
-      http://commons.apache.org/proper/commons-io/
-      Copyright 2013, ASF
-       Kevin A. Burton
-       Scott Sanders
-       Daniel Rall
-       Christoph.Reck
-       Peter Donald
-       Jeff Turner
-       Matthew Hawthorne
-       Martin Cooper
-       Jeremias Maerki
-       Stephen Colebourne
+ - FilenameUtils.java (normalize + dependencies) - 
+   http://commons.apache.org/proper/commons-io/
+   Copyright 2013 - The Apache Software License, Version 2.0
+     ASF
+     Kevin A. Burton
+     Scott Sanders
+     Daniel Rall
+     Christoph.Reck
+     Peter Donald
+     Jeff Turner
+     Matthew Hawthorne
+     Martin Cooper
+     Jeremias Maerki
+     Stephen Colebourne
 
 
-    - SLF4J - MIT License
-      http://www.slf4j.org
-      Copyright 2004-2008, QOS.ch
+ - SLF4J - 
+   http://www.slf4j.org
+   Copyright 2008 - MIT License
+     QOS.ch
