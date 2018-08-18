@@ -57,7 +57,6 @@ Maven Info
     </dependency>
 </dependencies>
 ```
-
   
 Gradle Info
 ---------
