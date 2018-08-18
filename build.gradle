@@ -87,7 +87,7 @@ licensing {
 
     license('FilenameUtils.java (normalize + dependencies)', License.APACHE_2) {
         copyright 2013
-        author 'ASF'
+        author 'The Apache Software Foundation'
         author 'Kevin A. Burton'
         author 'Scott Sanders'
         author 'Daniel Rall'
