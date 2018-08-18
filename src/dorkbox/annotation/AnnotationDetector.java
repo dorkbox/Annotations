@@ -47,8 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.LoggerFactory;
-
 /**
  * {@code AnnotationDetector} reads Java Class Files ("*.class") and reports the
  * found annotations via a simple, developer friendly API.
@@ -122,7 +120,7 @@ import org.slf4j.LoggerFactory;
 public final
 class AnnotationDetector implements Builder, Cursor {
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(AnnotationDetector.class);
+    private static final boolean DEBUG = false;
 
     // Constant Pool type ta gs
     private static final int CP_UTF8 = 1;
@@ -192,17 +190,20 @@ class AnnotationDetector implements Builder, Cursor {
             this.cfIterator = new ClassFileIterator(filesOrDirectories, pkgNameFilter);
 
             if (filesOrDirectories.length == 0) {
-                LOG.warn("No files or directories to scan!");
+                if (DEBUG) {
+                    System.err.println("No files or directories to scan!");
+                }
             }
-            else if (LOG.isTraceEnabled()) {
-                LOG.trace("Files and root directories scanned:\n{}", Arrays.toString(filesOrDirectories).replace(", ", "\n"));
+            else if (DEBUG) {
+                System.err.println("Files and root directories scanned:");
+                System.err.println(Arrays.toString(filesOrDirectories).replace(", ", "\n"));
             }
         }
         else {
             this.cfIterator = iterator;
 
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Class Files from the custom classfileiterator scanned.");
+            if (DEBUG) {
+                System.err.println("Class Files from the custom classfileiterator scanned.");
             }
         }
 
@@ -577,9 +578,10 @@ class AnnotationDetector implements Builder, Cursor {
         final Enumeration<URL> resourceEnum = loader.getResources(resourceName);
         while (resourceEnum.hasMoreElements()) {
             final URL url = resourceEnum.nextElement();
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Resource URL: {}", url);
+            if (DEBUG) {
+                System.err.println("Resource URL: " + url);
             }
+
             // Handle JBoss VFS URL's which look like (example package 'nl.dvelop'):
             // vfs:/foo/bar/website.war/WEB-INF/classes/nl/dvelop/
             // vfs:/foo/bar/website.war/WEB-INF/lib/dwebcore-0.0.1.jar/nl/dvelop/
@@ -643,8 +645,8 @@ class AnnotationDetector implements Builder, Cursor {
                     if (mustEndInClass && !name.endsWith(".class")) {
                         continue;
                     }
-                    if (LOG.isTraceEnabled()) {
-                        LOG.trace("Class File: {}", name);
+                    if (DEBUG) {
+                        System.err.println("Class File: " + name);
                     }
                     read(this.cpBuffer);
                 } // else ignore
@@ -681,10 +683,12 @@ class AnnotationDetector implements Builder, Cursor {
     private
     void readVersion(final DataInput di) throws IOException {
         // sequence: minor version, major version (argument_index is 1-based)
-        if (LOG.isTraceEnabled()) {
+
+        if (DEBUG) {
             int minor = di.readUnsignedShort();
             int maj = di.readUnsignedShort();
-            LOG.trace("Java Class version {}.{}", maj, minor);
+
+            System.err.println("Java Class version " + maj + "." + minor);
         }
         else {
             di.skipBytes(4);
@@ -773,7 +777,10 @@ class AnnotationDetector implements Builder, Cursor {
             // decriptor is Field type in raw format, we do not need it, so skip
             //final String descriptor = resolveUtf8(di);
             di.skipBytes(2);
-            LOG.trace("Field: {}", this.memberName);
+
+            if (DEBUG) {
+                System.err.println("Field: " + this.memberName);
+            }
             readAttributes(di, ElementType.FIELD);
         }
     }
@@ -785,7 +792,11 @@ class AnnotationDetector implements Builder, Cursor {
             readAccessFlags(di);
             this.memberName = resolveUtf8(di);
             this.methodDescriptor = resolveUtf8(di);
-            LOG.trace("Method: {}", this.memberName);
+
+            if (DEBUG) {
+                System.err.println("Method: " + this.memberName);
+            }
+
             readAttributes(di, "<init>".equals(this.memberName) ? ElementType.CONSTRUCTOR : ElementType.METHOD);
         }
     }
@@ -800,11 +811,15 @@ class AnnotationDetector implements Builder, Cursor {
             final int length = di.readInt();
             if (this.elementTypes.contains(reporterType) && ("RuntimeVisibleAnnotations".equals(name) ||
                                                              "RuntimeInvisibleAnnotations".equals(name))) {
-                LOG.trace("Attribute: {}", name);
+                if (DEBUG) {
+                    System.err.println("Attribute: " + name);
+                }
                 readAnnotations(di, reporterType);
             }
             else {
-                LOG.trace("Attribute: {} (ignored)", name);
+                if (DEBUG) {
+                    System.err.println("Attribute: " + name + " (ignored)");
+                }
                 di.skipBytes(length);
             }
         }
@@ -819,11 +834,16 @@ class AnnotationDetector implements Builder, Cursor {
             final String rawTypeName = readAnnotation(di);
             this.annotationType = this.annotations.get(rawTypeName);
             if (this.annotationType == null) {
-                LOG.trace("Annotation: {} (ignored)", rawTypeName);
+                if (DEBUG) {
+                    System.err.println("Annotation: " + rawTypeName + " (ignored)");
+                }
                 continue;
             }
-            LOG.trace("Annotation: ''{}'' on type ''{}'', member ''{}'' (reported)", this.annotationType.getName(), getTypeName(),
-                      getMemberName());
+
+            if (DEBUG) {
+                System.err.println("Annotation: '" + this.annotationType.getName() + "' on type '" + getTypeName() + "', member '" + getMemberName() + "' (reported)");
+            }
+
             this.elementType = elementType;
             this.reporter.report(this);
         }
@@ -835,8 +855,8 @@ class AnnotationDetector implements Builder, Cursor {
         // num_element_value_pairs
         final int count = di.readUnsignedShort();
         for (int i = 0; i < count; ++i) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Anntotation Element: {}", resolveUtf8(di));
+            if (DEBUG) {
+                System.err.println("Anntotation Element: " + resolveUtf8(di));
             }
             else {
                 di.skipBytes(2);
