@@ -62,7 +62,7 @@ apply plugin: 'java-library'
 
 project.description = 'Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 6+'
 project.group = 'com.dorkbox'
-project.version = '2.15'
+project.version = '2.14'
 
 project.ext.name = 'Annotations'
 project.ext.url = 'https://git.dorkbox.com/dorkbox/Annotations'
