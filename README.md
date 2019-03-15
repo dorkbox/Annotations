@@ -63,7 +63,7 @@ Gradle Info
 ````
 dependencies {
     ...
-    compile 'com.dorkbox:Annotations:2.14'
+    compile "com.dorkbox:Annotations:2.14"
 }
 ````
 
