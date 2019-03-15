@@ -1,5 +1,7 @@
-#Annotations
-###### [![Dorkbox](https://badge.dorkbox.com/dorkbox.svg "Dorkbox")](https://git.dorkbox.com/dorkbox/Annotations) &nbsp; [![Github](https://badge.dorkbox.com/github.svg "Github")](https://github.com/dorkbox/Annotations) &nbsp; [![Gitlab](https://badge.dorkbox.com/gitlab.svg "Gitlab")](https://gitlab.com/dorkbox/Annontations) &nbsp; [![Bitbucket](https://badge.dorkbox.com/bitbucket.svg "Bitbucket")](https://bitbucket.org/dorkbox/Annotations)
+Annotations
+===========
+
+###### [![Dorkbox](https://badge.dorkbox.com/dorkbox.svg "Dorkbox")](https://git.dorkbox.com/dorkbox/Annotations) [![Github](https://badge.dorkbox.com/github.svg "Github")](https://github.com/dorkbox/Annotations) [![Gitlab](https://badge.dorkbox.com/gitlab.svg "Gitlab")](https://gitlab.com/dorkbox/Annotations) [![Bitbucket](https://badge.dorkbox.com/bitbucket.svg "Bitbucket")](https://bitbucket.org/dorkbox/Annotations)
 
 
 
