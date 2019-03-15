@@ -43,9 +43,9 @@ plugins {
     id("com.dorkbox.VersionUpdate") version "1.4.1"
 
     // setup checking for the latest version of a plugin or dependency
-    id("com.github.ben-manes.versions") version "0.20.0"
+    id("com.github.ben-manes.versions") version "0.21.0"
 
-    kotlin("jvm") version "1.3.11"
+    kotlin("jvm") version "1.3.21"
 }
 
 object Extras {
@@ -359,6 +359,6 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
 /////  Run this task, then refresh the gradle project
 ///////////////////////////////
 val wrapperUpdate by tasks.creating(Wrapper::class) {
-    gradleVersion = "5.1.1"
+    gradleVersion = "5.2.1"
     distributionUrl = distributionUrl.replace("bin", "all")
 }
