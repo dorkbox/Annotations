@@ -153,39 +153,6 @@ repositories {
 }
 
 ///////////////////////////////
-//////    UTILITIES COMPILE
-///////////////////////////////
-
-// as long as the 'Utilities' project is ALSO imported into IntelliJ, class resolution will work (add the sources in the intellij project)
-val utils : Configuration by configurations.creating
-
-fun javaFile(vararg fileNames: String): Iterable<String> {
-    val fileList = ArrayList<String>(fileNames.size)
-
-    fileNames.forEach { name ->
-        fileList.add(name.replace('.', '/') + ".java")
-    }
-
-    return fileList
-}
-
-task<JavaCompile>("compileUtils") {
-    // we don't want the default include of **/*.java
-    includes.clear()
-
-    source = fileTree("../Utilities/src")
-    include(javaFile(
-        "dorkbox.util.OS",
-        "dorkbox.util.OSType",
-        "dorkbox.util.IO",
-        "dorkbox.util.FileUtil"
-                    ))
-
-    classpath = files(utils)
-    destinationDir = file("$rootDir/build/classes_utilities")
-}
-
-///////////////////////////////
 //////    Task defaults
 ///////////////////////////////
 tasks.withType<JavaCompile> {
@@ -196,9 +163,6 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.jar.get().apply {
-    // include applicable class files from subset of Utilities project
-    from((tasks["compileUtils"] as JavaCompile).outputs)
-
     manifest {
         // https://docs.oracle.com/javase/tutorial/deployment/jar/packageman.html
         attributes["Name"] = Extras.name
@@ -221,8 +185,7 @@ tasks.compileJava.get().apply {
 
 
 dependencies {
-    // add compile utils to dependencies
-    implementation(files((tasks["compileUtils"] as JavaCompile).outputs))
+    implementation("com.dorkbox:Utilities:1.0")
 }
 
 ///////////////////////////////
