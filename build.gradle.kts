@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 dorkbox, llc
+ * Copyright 2020 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,121 +15,59 @@
  */
 
 import java.time.Instant
-import java.util.*
-import kotlin.reflect.KMutableProperty
-import kotlin.reflect.full.declaredMemberProperties
+
 
 ///////////////////////////////
 //////    PUBLISH TO SONATYPE / MAVEN CENTRAL
-//////
-////// TESTING : local maven repo <PUBLISHING - publishToMavenLocal>
-//////
-////// RELEASE : sonatype / maven central, <PUBLISHING - publish> then <RELEASE - closeAndReleaseRepository>
+////// TESTING : (to local maven repo) <'publish and release' - 'publishToMavenLocal'>
+////// RELEASE : (to sonatype/maven central), <'publish and release' - 'publishToSonatypeAndRelease'>
 ///////////////////////////////
 
-println("\tGradle ${project.gradle.gradleVersion} on Java ${JavaVersion.current()}")
+gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS   // always show the stacktrace!
+gradle.startParameter.warningMode = WarningMode.All
 
 plugins {
     java
-    signing
-    `maven-publish`
 
-    // close and release on sonatype
-    id("io.codearte.nexus-staging") version "0.20.0"
+    id("com.dorkbox.GradleUtils") version "1.9"
+    id("com.dorkbox.Licensing") version "2.2"
+    id("com.dorkbox.VersionUpdate") version "2.0"
+    id("com.dorkbox.GradlePublish") version "1.4"
+    id("com.dorkbox.GradleModuleInfo") version "1.0"
 
-    id("com.dorkbox.CrossCompile") version "1.0.1"
-    id("com.dorkbox.Licensing") version "1.4"
-    id("com.dorkbox.VersionUpdate") version "1.4.1"
-    id("com.dorkbox.GradleUtils") version "1.0"
-
-    kotlin("jvm") version "1.3.21"
+    kotlin("jvm") version "1.3.72"
 }
 
 object Extras {
     // set for the project
-    const val description = "Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 6+"
+    const val description = "Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 11"
     const val group = "com.dorkbox"
-    const val version = "2.14"
+    const val version = "3.0"
 
     // set as project.ext
     const val name = "Annotations"
     const val id = "Annotations"
     const val vendor = "Dorkbox LLC"
+    const val vendorUrl = "https://dorkbox.com"
     const val url = "https://git.dorkbox.com/dorkbox/Annotations"
     val buildDate = Instant.now().toString()
-
-    val JAVA_VERSION = JavaVersion.VERSION_1_6.toString()
-
-    var sonatypeUserName = ""
-    var sonatypePassword = ""
 }
 
 ///////////////////////////////
 /////  assign 'Extras'
 ///////////////////////////////
-description = Extras.description
-group = Extras.group
-version = Extras.version
-
-val propsFile = File("$projectDir/../../gradle.properties").normalize()
-if (propsFile.canRead()) {
-    println("\tLoading custom property data from: [$propsFile]")
-
-    val props = Properties()
-    propsFile.inputStream().use {
-        props.load(it)
-    }
-
-    val extraProperties = Extras::class.declaredMemberProperties.filterIsInstance<KMutableProperty<String>>()
-    props.forEach { (k, v) -> run {
-        val key = k as String
-        val value = v as String
-
-        val member = extraProperties.find { it.name == key }
-        if (member != null) {
-            member.setter.call(Extras::class.objectInstance, value)
-        }
-        else {
-            project.extra.set(k, v)
-        }
-    }}
-}
+GradleUtils.load("$projectDir/../../gradle.properties", Extras)
+GradleUtils.fixIntellijPaths()
+GradleUtils.defaultResolutionStrategy()
+GradleUtils.compileConfiguration(JavaVersion.VERSION_11)
 
 
 licensing {
     license(License.APACHE_2) {
+        description(Extras.description)
         author(Extras.vendor)
         url(Extras.url)
-        note(Extras.description)
-        note("Copyright 2011 - 2014, XIAM Solutions B.V. (http://www.xiam.nl)")
-    }
-
-
-    license("Dorkbox Utils", License.APACHE_2) {
-        author(Extras.vendor)
-        url("https://git.dorkbox.com/dorkbox/Utilities")
-    }
-
-    license("FilenameUtils.java (normalize + dependencies)", License.APACHE_2) {
-        copyright(2013)
-        author("The Apache Software Foundation")
-        author("Kevin A. Burton")
-        author("Scott Sanders")
-        author("Daniel Rall")
-        author("Christoph.Reck")
-        author("Peter Donald")
-        author("Jeff Turner")
-        author("Matthew Hawthorne")
-        author("Martin Cooper")
-        author("Jeremias Maerki")
-        author("Stephen Colebourne")
-        url("")
-    }
-
-    license("SLF4J", License.MIT) {
-        copyright(2008)
-        author("QOS.ch")
-        url("http://www.slf4j.org")
+        note("Copyright 2014, XIAM Solutions B.V. (http://www.xiam.nl)")
     }
 }
 
@@ -149,16 +87,6 @@ repositories {
     jcenter()
 }
 
-///////////////////////////////
-//////    Task defaults
-///////////////////////////////
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-
-    sourceCompatibility = Extras.JAVA_VERSION
-    targetCompatibility = Extras.JAVA_VERSION
-}
-
 tasks.jar.get().apply {
     manifest {
         // https://docs.oracle.com/javase/tutorial/deployment/jar/packageman.html
@@ -176,116 +104,30 @@ tasks.jar.get().apply {
     }
 }
 
-tasks.compileJava.get().apply {
-    println("\tCompiling classes to Java $sourceCompatibility")
-}
-
-
 dependencies {
-    implementation("com.dorkbox:Utilities:1.1")
+
 }
 
-///////////////////////////////
-//////    PUBLISH TO SONATYPE / MAVEN CENTRAL
-//////
-////// TESTING : local maven repo <PUBLISHING - publishToMavenLocal>
-//////
-////// RELEASE : sonatype / maven central, <PUBLISHING - publish> then <RELEASE - closeAndReleaseRepository>
-///////////////////////////////
-val sourceJar = task<Jar>("sourceJar") {
-    description = "Creates a JAR that contains the source code."
+publishToSonatype {
+    groupId = Extras.group
+    artifactId = Extras.id
+    version = Extras.version
 
-    from(sourceSets["main"].java)
+    name = Extras.name
+    description = Extras.description
+    url = Extras.url
 
-    archiveClassifier.set("sources")
-}
+    vendor = Extras.vendor
+    vendorUrl = Extras.vendorUrl
 
-val javaDocJar = task<Jar>("javaDocJar") {
-    description = "Creates a JAR that contains the javadocs."
-
-    archiveClassifier.set("javadoc")
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = Extras.group
-            artifactId = Extras.id
-            version = Extras.version
-
-            from(components["java"])
-
-            artifact(sourceJar)
-            artifact(javaDocJar)
-
-            pom {
-                name.set(Extras.name)
-                description.set(Extras.description)
-                url.set(Extras.url)
-
-                issueManagement {
-                    url.set("${Extras.url}/issues")
-                    system.set("Gitea Issues")
-                }
-                organization {
-                    name.set(Extras.vendor)
-                    url.set("https://dorkbox.com")
-                }
-                developers {
-                    developer {
-                        id.set("dorkbox")
-                        name.set(Extras.vendor)
-                        email.set("email@dorkbox.com")
-                    }
-                }
-                scm {
-                    url.set(Extras.url)
-                    connection.set("scm:${Extras.url}.git")
-                }
-            }
-        }
+    issueManagement {
+        url = "${Extras.url}/issues"
+        nickname = "Gitea Issues"
     }
 
-
-    repositories {
-        maven {
-            setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-            credentials {
-                username = Extras.sonatypeUserName
-                password = Extras.sonatypePassword
-            }
-        }
+    developer {
+        id = "dorkbox"
+        name = Extras.vendor
+        email = "email@dorkbox.com"
     }
-
-
-    tasks.withType<PublishToMavenRepository> {
-        onlyIf {
-            publication == publishing.publications["maven"] && repository == publishing.repositories["maven"]
-        }
-    }
-
-    tasks.withType<PublishToMavenLocal> {
-        onlyIf {
-            publication == publishing.publications["maven"]
-        }
-    }
-
-    // output the release URL in the console
-    tasks["releaseRepository"].doLast {
-        val url = "https://oss.sonatype.org/content/repositories/releases/"
-        val projectName = Extras.group.replace('.', '/')
-        val name = Extras.name
-        val version = Extras.version
-
-        println("Maven URL: $url$projectName/$name/$version/")
-    }
-}
-
-nexusStaging {
-    username = Extras.sonatypeUserName
-    password = Extras.sonatypePassword
-}
-
-signing {
-    sign(publishing.publications["maven"])
 }

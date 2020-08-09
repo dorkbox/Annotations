@@ -1,8 +1,7 @@
 Annotations
 ===========
 
-###### [![Dorkbox](https://badge.dorkbox.com/dorkbox.svg "Dorkbox")](https://git.dorkbox.com/dorkbox/Annotations) [![Github](https://badge.dorkbox.com/github.svg "Github")](https://github.com/dorkbox/Annotations) [![Gitlab](https://badge.dorkbox.com/gitlab.svg "Gitlab")](https://gitlab.com/dorkbox/Annotations) [![Bitbucket](https://badge.dorkbox.com/bitbucket.svg "Bitbucket")](https://bitbucket.org/dorkbox/Annotations)
-
+###### [![Dorkbox](https://badge.dorkbox.com/dorkbox.svg "Dorkbox")](https://git.dorkbox.com/dorkbox/Annotations) [![Github](https://badge.dorkbox.com/github.svg "Github")](https://github.com/dorkbox/Annotations) [![Gitlab](https://badge.dorkbox.com/gitlab.svg "Gitlab")](https://gitlab.com/dorkbox/Annotations)
 
 
 The Annotations project is based on, and **almost** identical to the excellent [infomas AnnotationDetector](https://github.com/rmuller/infomas-asl).
@@ -48,7 +47,7 @@ Maven Info
     <dependency>
       <groupId>com.dorkbox</groupId>
       <artifactId>Annotations</artifactId>
-      <version>2.14</version>
+      <version>3.0</version>
     </dependency>
 </dependencies>
 ```
@@ -58,15 +57,12 @@ Gradle Info
 ````
 dependencies {
     ...
-    compile "com.dorkbox:Annotations:2.14"
+    compile "com.dorkbox:Annotations:3.0"
 }
 ````
 
-Or if you don't want to use Maven, you can access the files directly here:  
-https://repo1.maven.org/maven2/com/dorkbox/Annotations/  
-
-
 License
 ---------
-This project is © 2011 - 2014, XIAM Solutions B.V. (http://www.xiam.nl) and © 2014 dorkbox llc, and is distributed under the terms of the Apache v2.0 License. See file "LICENSE" for further references.
+This project is © 2014, XIAM Solutions B.V. (http://www.xiam.nl) and © 2020 dorkbox llc, and is distributed under the terms of the
+ Apache v2.0 License. See file "LICENSE" for further references.
 
