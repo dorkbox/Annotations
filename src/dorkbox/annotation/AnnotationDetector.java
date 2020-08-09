@@ -239,7 +239,7 @@ class AnnotationDetector implements Builder, Cursor {
         final String[] pkgNameFilter;
 
         // DORKBOX added
-        boolean isCustomLoader = "dorkbox.classloader.ClassLoader" == loader.getClass().getName();
+        boolean isCustomLoader = "dorkbox.classloader.ClassLoader".equals(loader.getClass().getName());
         if (isCustomLoader) {
             final List<URL> fileNames;
 
@@ -247,7 +247,7 @@ class AnnotationDetector implements Builder, Cursor {
             if (packageNames.length == 0) {
                 pkgNameFilter = null;
                 List<String> asList = Arrays.asList(System.getProperty("java.class.path").split(File.pathSeparator));
-                fileNames = new ArrayList<URL>(asList.size());
+                fileNames = new ArrayList<>(asList.size());
                 for (String s : asList) {
                     File file = new File(s);
                     fileNames.add(file.toURI().toURL());
@@ -263,7 +263,7 @@ class AnnotationDetector implements Builder, Cursor {
                     }
                 }
 
-                fileNames = new ArrayList<URL>();
+                fileNames = new ArrayList<>();
                 for (final String packageName : pkgNameFilter) {
                     final Enumeration<URL> resourceEnum = loader.getResources(packageName);
                     while (resourceEnum.hasMoreElements()) {
@@ -276,7 +276,7 @@ class AnnotationDetector implements Builder, Cursor {
             return new AnnotationDetector(loader, null, new CustomClassloaderIterator(fileNames, packageNames), pkgNameFilter);
         }
         else {
-            final Set<File> files = new HashSet<File>();
+            final Set<File> files = new HashSet<>();
 
             if (packageNames.length == 0) {
                 pkgNameFilter = null;
@@ -297,7 +297,7 @@ class AnnotationDetector implements Builder, Cursor {
                     addFiles(loader, packageName, files);
                 }
             }
-            return new AnnotationDetector(loader, files.toArray(new File[files.size()]), null, pkgNameFilter);
+            return new AnnotationDetector(loader, files.toArray(new File[0]), null, pkgNameFilter);
         }
     }
 
@@ -334,7 +334,7 @@ class AnnotationDetector implements Builder, Cursor {
     @Override
     public
     Builder forAnnotations(final Class<? extends Annotation> annotation) {
-        this.annotations = new HashMap<String, Class<? extends Annotation>>(1);
+        this.annotations = new HashMap<>(1);
         // map "raw" type names to Class object
         this.annotations.put("L" + annotation.getName().replace('.', '/') + ";", annotation);
         return this;
@@ -343,10 +343,11 @@ class AnnotationDetector implements Builder, Cursor {
     /**
      * See {@link Builder#forAnnotations(java.lang.Class...) }.
      */
+    @SafeVarargs
     @Override
-    public
+    public final
     Builder forAnnotations(final Class<? extends Annotation>... annotations) {
-        this.annotations = new HashMap<String, Class<? extends Annotation>>(annotations.length);
+        this.annotations = new HashMap<>(annotations.length);
         // map "raw" type names to Class object
         for (final Class<? extends Annotation> annotation : annotations) {
             this.annotations.put("L" + annotation.getName().replace('.', '/') + ";", annotation);
@@ -434,15 +435,16 @@ class AnnotationDetector implements Builder, Cursor {
     public
     <T> List<T> collect(final ReporterFunction<T> reporter) throws IOException {
         final List<T> list = new ArrayList<T>();
-        this.reporter = new Reporter() {
 
+        //noinspection Convert2Lambda
+        this.reporter = new Reporter() {
             @Override
             public
             void report(Cursor cursor) {
                 list.add(reporter.report(cursor));
             }
-
         };
+
         detect(this.cfIterator);
         return list;
     }
@@ -878,13 +880,11 @@ class AnnotationDetector implements Builder, Cursor {
             case SHORT:
             case BOOLEAN:
             case STRING:
+            case CLASS:
                 di.skipBytes(2);
                 break;
             case ENUM:
                 di.skipBytes(4); // 2 * u2
-                break;
-            case CLASS:
-                di.skipBytes(2);
                 break;
             case ANNOTATION:
                 readAnnotation(di);
@@ -939,7 +939,7 @@ class AnnotationDetector implements Builder, Cursor {
                     return new Class<?>[0];
                 }
                 else {
-                    args = new LinkedList<Class<?>>();
+                    args = new LinkedList<>();
                 }
             }
 
@@ -990,7 +990,7 @@ class AnnotationDetector implements Builder, Cursor {
                     break;
                 case ')':
                     // end of argument type list, stop parsing
-                    return args.toArray(new Class<?>[args.size()]);
+                    return args.toArray(new Class<?>[0]);
                 default:
                     throw unparseable(descriptor, "Not a recognoized type: " + c);
             }
@@ -1023,6 +1023,5 @@ class AnnotationDetector implements Builder, Cursor {
     AssertionError assertionError(String message, Object... args) {
         return new AssertionError(String.format(message, args));
     }
-
 }
 
