@@ -21,7 +21,11 @@
  */
 package dorkbox.annotation;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * {@code ClassFileBuffer} is used by {@link AnnotationDetector} to efficiently read Java
@@ -32,7 +36,6 @@ import java.io.*;
  * {@code com.sun.corba.se.impl.logging.ORBUtilSystemException} is 128.2 kb!
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- * @since annotation-detector 3.0.0
  */
 final
 class ClassFileBuffer implements DataInput {

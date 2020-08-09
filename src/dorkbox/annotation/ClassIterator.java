@@ -34,7 +34,6 @@ import java.io.InputStream;
  * For every Java ClassFile ({@code .class}) an {@link InputStream} is returned.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- * @since annotation-detector 3.0.0
  */
 public
 interface ClassIterator {

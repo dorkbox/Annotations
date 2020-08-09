@@ -33,7 +33,6 @@ import java.util.List;
  * Its only role is to offer a more clean API.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- * @since annotation-detector 3.1.0
  *
  * @author dorkbox, llc
  */

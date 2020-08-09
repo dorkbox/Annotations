@@ -40,7 +40,6 @@ import java.util.zip.ZipFile;
  * The most efficient way of iterating is used, see benchmark in test classes.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- * @since annotation-detector 3.0.0
  *
  * @author dorkbox, llc
  */

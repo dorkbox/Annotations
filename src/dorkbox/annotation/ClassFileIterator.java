@@ -22,7 +22,11 @@
  */
 package dorkbox.annotation;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * {@code ClassFileIterator} is used to iterate over all Java ClassFile files available within
@@ -31,7 +35,6 @@ import java.io.*;
  * For every Java ClassFile ({@code .class}) an {@link InputStream} is returned.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- * @since annotation-detector 3.0.0
  *
  * @author dorkbox, llc
  */

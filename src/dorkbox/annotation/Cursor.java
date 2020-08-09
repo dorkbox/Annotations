@@ -31,7 +31,6 @@ import java.lang.reflect.Method;
  * {@code Cursor} offers a "cursor interface" for working with {@link AnnotationDetector}.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- * @since annotation-detector 3.1.0
  */
 public
 interface Cursor {

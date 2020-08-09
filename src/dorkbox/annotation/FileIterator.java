@@ -41,7 +41,6 @@ import java.util.NoSuchElementException;
  * </pre>
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- * @since annotation-detector 3.0.0
  */
 final
 class FileIterator {

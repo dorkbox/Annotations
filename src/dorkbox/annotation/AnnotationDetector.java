@@ -112,7 +112,6 @@ import java.util.Set;
  * ASM or Javassist).
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- * @since annotation-detector 3.0.0
  *
  * @author dorkbox, llc
  */

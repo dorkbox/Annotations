@@ -29,7 +29,6 @@ package dorkbox.annotation;
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @see Builder#report(Reporter)
- * @since annotation-detector 3.1.0
  */
 public
 interface Reporter {
