@@ -15,8 +15,6 @@
  */
 package dorkbox.annotation;
 
-import dorkbox.util.FileUtil;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -51,7 +49,7 @@ class CustomClassloaderIterator implements ClassIterator {
             URL url = iterator.next();
             if (!url.getProtocol().equals("box")) {
                 try {
-                    File file = FileUtil.normalize(new File(url.toURI()));
+                    File file = new File(url.toURI());
                     files.add(file);
                     iterator.remove();
                 } catch (URISyntaxException ex) {
