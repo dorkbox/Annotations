@@ -137,6 +137,8 @@ class AnnotationDetector implements Builder, Cursor {
     private static final int CP_METHOD_HANDLE = 15; // Java VM SE 7
     private static final int CP_METHOD_TYPE = 16; // Java VM SE 7
     private static final int CP_INVOKE_DYNAMIC = 18; // Java VM SE 7
+    private static final int CP_MODULE_INFO = 19; // Java VM SE 9
+    private static final int CP_PACKAGE_INFO = 20; // Java VM SE 9
 
     // AnnotationElementValue / Java raw types
     private static final int BYTE = 'B';
@@ -739,11 +741,13 @@ class AnnotationDetector implements Builder, Cursor {
                 return false;
             case CP_CLASS:
             case CP_STRING:
+            case CP_MODULE_INFO:
+            case CP_PACKAGE_INFO:
                 // reference to CP_UTF8 entry. The referenced index can have a higher number!
                 this.constantPool[index] = di.readUnsignedShort();
                 return false;
             default:
-                throw new ClassFormatError("Unkown tag value for constant pool entry: " + tag);
+                throw new ClassFormatError("Unknown tag value for constant pool entry: " + tag);
         }
     }
 
