@@ -121,6 +121,7 @@ class AnnotationDetector implements Builder, Cursor {
 
     private static final boolean DEBUG = false;
 
+    // https://en.wikipedia.org/wiki/Java_class_file
     // Constant Pool type ta gs
     private static final int CP_UTF8 = 1;
     private static final int CP_INTEGER = 3;
@@ -135,7 +136,10 @@ class AnnotationDetector implements Builder, Cursor {
     private static final int CP_NAME_AND_TYPE = 12;
     private static final int CP_METHOD_HANDLE = 15; // Java VM SE 7
     private static final int CP_METHOD_TYPE = 16; // Java VM SE 7
+    private static final int CP_DYNAMIC = 17; // Java VM SE 11
     private static final int CP_INVOKE_DYNAMIC = 18; // Java VM SE 7
+    private static final int CP_MODULE_ID = 19; // Java VM SE 9
+    private static final int CP_MODULE_PACKAGE_ID = 20; // Java VM SE 9
 
     // AnnotationElementValue / Java raw types
     private static final int BYTE = 'B';
@@ -717,6 +721,8 @@ class AnnotationDetector implements Builder, Cursor {
         final int tag = di.readUnsignedByte();
         switch (tag) {
             case CP_METHOD_TYPE:
+            case CP_MODULE_ID:
+            case CP_MODULE_PACKAGE_ID:
                 di.skipBytes(2);  // readUnsignedShort()
                 return false;
             case CP_METHOD_HANDLE:
@@ -728,6 +734,7 @@ class AnnotationDetector implements Builder, Cursor {
             case CP_REF_METHOD:
             case CP_REF_INTERFACE:
             case CP_NAME_AND_TYPE:
+            case CP_DYNAMIC:
             case CP_INVOKE_DYNAMIC:
                 di.skipBytes(4); // readInt() / readFloat() / readUnsignedShort() * 2
                 return false;
