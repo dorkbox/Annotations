@@ -47,7 +47,7 @@ Maven Info
     <dependency>
       <groupId>com.dorkbox</groupId>
       <artifactId>Annotations</artifactId>
-      <version>3.0</version>
+      <version>3.1</version>
     </dependency>
 </dependencies>
 ```
@@ -57,7 +57,7 @@ Gradle Info
 ````
 dependencies {
     ...
-    compile "com.dorkbox:Annotations:3.0"
+    compile "com.dorkbox:Annotations:3.1"
 }
 ````
 
