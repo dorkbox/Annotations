@@ -782,7 +782,7 @@ class AnnotationDetector implements Builder, Cursor {
         for (int i = 0; i < count; ++i) {
             readAccessFlags(di);
             this.memberName = resolveUtf8(di);
-            // decriptor is Field type in raw format, we do not need it, so skip
+            // descriptor is Field type in raw format, we do not need it, so skip
             //final String descriptor = resolveUtf8(di);
             di.skipBytes(2);
 
