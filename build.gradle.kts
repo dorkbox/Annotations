@@ -29,13 +29,13 @@ gradle.startParameter.warningMode = WarningMode.All
 plugins {
     java
 
-    id("com.dorkbox.GradleUtils") version "1.12"
-    id("com.dorkbox.Licensing") version "2.5"
-    id("com.dorkbox.VersionUpdate") version "2.0"
-    id("com.dorkbox.GradlePublish") version "1.8"
-    id("com.dorkbox.GradleModuleInfo") version "1.0"
+    id("com.dorkbox.GradleUtils") version "1.16"
+    id("com.dorkbox.Licensing") version "2.12"
+    id("com.dorkbox.VersionUpdate") version "2.4"
+    id("com.dorkbox.GradlePublish") version "1.12"
+    id("com.dorkbox.GradleModuleInfo") version "1.1"
 
-    kotlin("jvm") version "1.4.0"
+    kotlin("jvm") version "1.6.10"
 }
 
 object Extras {
