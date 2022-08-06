@@ -71,6 +71,10 @@ licensing {
     }
 }
 
+tasks.compileJava {
+    options.release.set(7)
+}
+
 sourceSets {
     main {
         java {
