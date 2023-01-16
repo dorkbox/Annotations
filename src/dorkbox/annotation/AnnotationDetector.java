@@ -1,18 +1,11 @@
-/* AnnotationDetector.java
- *
- * Created: 2011-10-10 (Year-Month-Day)
- * Character encoding: UTF-8
- *
- ****************************************** LICENSE *******************************************
- *
- * Copyright (c) 2011 - 2014 XIAM Solutions B.V. (http://www.xiam.nl)
- * Copyright 2014 dorkbox, llc
+/*
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -157,6 +150,11 @@ class AnnotationDetector implements Builder, Cursor {
     private static final int CLASS = 'c';
     private static final int ANNOTATION = '@';
 
+    static {
+        // Add this project to the updates system, which verifies this class + UUID + version information
+        dorkbox.updates.Updates.INSTANCE.add(AnnotationDetector.class, "27e311d499c94b1aa0a879710429964d", getVersion());
+    }
+
     private final ClassLoader loader;
     // The buffer is reused during the life cycle of this AnnotationDetector instance
     private final ClassFileBuffer cpBuffer = new ClassFileBuffer();
@@ -217,7 +215,7 @@ class AnnotationDetector implements Builder, Cursor {
      */
     public static
     String getVersion() {
-        return "3.1";
+        return "3.2";
     }
 
     /**
@@ -1031,4 +1029,3 @@ class AnnotationDetector implements Builder, Cursor {
         return new AssertionError(String.format(message, args));
     }
 }
-

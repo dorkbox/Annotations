@@ -1,6 +1,13 @@
- - Annotations - Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 11
+ - Annotations - Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 8+
    [The Apache Software License, Version 2.0]
    https://git.dorkbox.com/dorkbox/Annotations
-   Copyright 2020
+   Copyright 2023
      Dorkbox LLC
-   Copyright 2014, XIAM Solutions B.V. (http://www.xiam.nl)
+
+   Extra license information
+     - INFOMAS ASL - 
+       [The Apache Software License, Version 2.0]
+       https://github.com/rmuller/infomas-asl
+       https://www.xiam.nl
+       Copyright 2016
+         XIAM Solutions B.V.

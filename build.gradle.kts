@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 import java.time.Instant
 
@@ -29,20 +30,19 @@ gradle.startParameter.warningMode = WarningMode.All
 plugins {
     java
 
-    id("com.dorkbox.GradleUtils") version "1.16"
-    id("com.dorkbox.Licensing") version "2.12"
-    id("com.dorkbox.VersionUpdate") version "2.4"
-    id("com.dorkbox.GradlePublish") version "1.12"
-    id("com.dorkbox.GradleModuleInfo") version "1.1"
+    id("com.dorkbox.GradleUtils") version "3.7"
+    id("com.dorkbox.Licensing") version "2.18"
+    id("com.dorkbox.VersionUpdate") version "2.5"
+    id("com.dorkbox.GradlePublish") version "1.15"
 
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.8.0"
 }
 
 object Extras {
     // set for the project
-    const val description = "Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 11"
+    const val description = "Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 8+"
     const val group = "com.dorkbox"
-    const val version = "3.1"
+    const val version = "3.2"
 
     // set as project.ext
     const val name = "Annotations"
@@ -57,9 +57,9 @@ object Extras {
 /////  assign 'Extras'
 ///////////////////////////////
 GradleUtils.load("$projectDir/../../gradle.properties", Extras)
-GradleUtils.fixIntellijPaths()
-GradleUtils.defaultResolutionStrategy()
-GradleUtils.compileConfiguration(JavaVersion.VERSION_11)
+GradleUtils.defaults()
+GradleUtils.compileConfiguration(JavaVersion.VERSION_1_8)
+GradleUtils.jpms(JavaVersion.VERSION_1_9)
 
 
 licensing {
@@ -67,24 +67,19 @@ licensing {
         description(Extras.description)
         author(Extras.vendor)
         url(Extras.url)
-        note("Copyright 2014, XIAM Solutions B.V. (http://www.xiam.nl)")
-    }
-}
 
-sourceSets {
-    main {
-        java {
-            setSrcDirs(listOf("src"))
-
-            // want to include java files for the source. 'setSrcDirs' resets includes...
-            include("**/*.java")
+        extra("INFOMAS ASL", License.APACHE_2) {
+            copyright(2016)
+            author("XIAM Solutions B.V.")
+            url("https://github.com/rmuller/infomas-asl")
+            url("https://www.xiam.nl")
         }
     }
 }
 
-repositories {
-    mavenLocal() // this must be first!
-    jcenter()
+
+dependencies {
+    api("com.dorkbox:Updates:1.1")
 }
 
 tasks.jar.get().apply {
@@ -102,10 +97,6 @@ tasks.jar.get().apply {
 
         attributes["Automatic-Module-Name"] = Extras.id
     }
-}
-
-dependencies {
-
 }
 
 publishToSonatype {
