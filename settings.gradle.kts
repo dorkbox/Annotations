@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 dorkbox, llc
+ * Copyright 2023 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,3 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// Sort via the number of other dorkbox dependencies
+rootProject.name = "1_${rootProject.name}"
