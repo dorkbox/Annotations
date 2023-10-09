@@ -15,8 +15,6 @@
  */
 
 
-import org.gradle.kotlin.dsl.GradleUtils
-
 ///////////////////////////////
 //////    PUBLISH TO SONATYPE / MAVEN CENTRAL
 ////// TESTING : (to local maven repo) <'publish and release' - 'publishToMavenLocal'>
@@ -24,10 +22,9 @@ import org.gradle.kotlin.dsl.GradleUtils
 ///////////////////////////////
 
 gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS   // always show the stacktrace!
-gradle.startParameter.warningMode = WarningMode.All
 
 plugins {
-    id("com.dorkbox.GradleUtils") version "3.17"
+    id("com.dorkbox.GradleUtils") version "3.18"
     id("com.dorkbox.Licensing") version "2.22"
     id("com.dorkbox.VersionUpdate") version "2.8"
     id("com.dorkbox.GradlePublish") version "1.20"
