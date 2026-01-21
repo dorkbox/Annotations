@@ -1,7 +1,7 @@
  - Annotations - Extremely fast, lightweight annotation scanner for the classpath, classloader, or files for Java 8+
    [The Apache Software License, Version 2.0]
    https://git.dorkbox.com/dorkbox/Annotations
-   Copyright 2023
+   Copyright 2026
      Dorkbox LLC
 
    Extra license information
@@ -11,6 +11,14 @@
        https://www.xiam.nl
        Copyright 2016
          XIAM Solutions B.V.
+
+     - Kotlin - 
+       [The Apache Software License, Version 2.0]
+       https://github.com/JetBrains/kotlin
+       Copyright 2020
+         JetBrains s.r.o. and Kotlin Programming Language contributors
+       Kotlin Compiler, Test Data+Libraries, and Tools repository contain third-party code, to which different licenses may apply
+       See: https://github.com/JetBrains/kotlin/blob/master/license/README.md
 
      - Updates - Software Update Management
        [The Apache Software License, Version 2.0]
