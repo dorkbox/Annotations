@@ -1,18 +1,11 @@
-/* ClassFileIterator.java
- *
- * Created: 2011-10-10 (Year-Month-Day)
- * Character encoding: UTF-8
- *
- ****************************************** LICENSE *******************************************
- *
- * Copyright (c) 2011 - 2013 XIAM Solutions B.V. (http://www.xiam.nl)
- * Copyright 2014 dorkbox, llc
+/*
+ * Copyright 2026 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,127 +13,102 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.annotation;
+package dorkbox.annotation
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*
 
 /**
- * {@code ClassFileIterator} is used to iterate over all Java ClassFile files available within
+ * `ClassFileIterator` is used to iterate over all Java ClassFile files available within
  * a specific context.
- * <p/>
- * For every Java ClassFile ({@code .class}) an {@link InputStream} is returned.
- *
- * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
- *
+ * 
+ * 
+ * For every Java ClassFile (`.class`) an [InputStream] is returned.
+ * 
+ * @author [Ronald K. Muller](mailto:rmuller@xiam.nl)
+ * 
  * @author dorkbox, llc
  */
-public
-class ClassFileIterator implements ClassIterator {
+class ClassFileIterator : ClassIterator {
+    private val fileIter: FileIterator
+    private val pkgNameFilter: Array<String>
 
-    private FileIterator fileIter;
-    protected final String[] pkgNameFilter;
+    private var zipIter: ZipFileIterator? = null
+    private var _isFile: Boolean = false
 
-    private ZipFileIterator zipIter;
-    private boolean isFile;
+    override val isFile: Boolean
+        get() = _isFile
 
     /**
-     * Create a new {@code ClassFileIterator} returning all Java ClassFile files available
+     * Create a new `ClassFileIterator` returning all Java ClassFile files available
      * from the specified files and/or directories, including sub directories.
-     * <p/>
+     * 
+     * 
      * If the (optional) package filter is defined, only class files staring with one of the
      * defined package names are returned.
      * NOTE: package names must be defined in the native format (using '/' instead of '.').
      */
-    protected
-    ClassFileIterator(final String[] pkgNameFilter) {
-        this.pkgNameFilter = pkgNameFilter;
+    constructor(filesOrDirectories: Array<File>, pkgNameFilter: Array<String>) {
+        this.fileIter = FileIterator(filesOrDirectories)
+        this.pkgNameFilter = pkgNameFilter
     }
 
     /**
-     * Create a new {@code ClassFileIterator} returning all Java ClassFile files available
-     * from the specified files and/or directories, including sub directories.
-     * <p/>
-     * If the (optional) package filter is defined, only class files staring with one of the
-     * defined package names are returned.
-     * NOTE: package names must be defined in the native format (using '/' instead of '.').
-     */
-    protected
-    ClassFileIterator(final File[] filesOrDirectories, final String[] pkgNameFilter) {
-        this.fileIter = new FileIterator(filesOrDirectories);
-        this.pkgNameFilter = pkgNameFilter;
-    }
-
-    /**
-     * Return the name of the Java ClassFile returned from the last call to {@link #next()}.
+     * Return the name of the Java ClassFile returned from the last call to [.next].
      * The name is either the path name of a file or the name of an ZIP/JAR file entry.
      */
-    @Override
-    public
-    String getName() {
-        // Both getPath() and getName() are very light weight method calls
-        return this.zipIter == null ? this.fileIter.getFile().getPath() : this.zipIter.getEntry().getName();
-    }
+    override val name: String
+        get() {
+            // Both getPath() and getName() are very light weight method calls
+            return if (this.zipIter == null) this.fileIter.file.path else this.zipIter!!.entry.getName()
+        }
 
     /**
-     * Return {@code true} if the current {@link InputStream} is reading from a plain
-     * {@link File}.
-     * Return {@code false} if the current {@link InputStream} is reading from a
-     * ZIP File Entry.
+     * Return the next Java ClassFile as an `InputStream`.
+     * 
+     * 
+     * NOTICE: Client code MUST close the returned `InputStream`!
      */
-    @Override
-    public
-    boolean isFile() {
-        return this.isFile;
-    }
-
-    /**
-     * Return the next Java ClassFile as an {@code InputStream}.
-     * <p/>
-     * NOTICE: Client code MUST close the returned {@code InputStream}!
-     */
-    @Override
-    public
-    InputStream next(final FilenameFilter filter) throws IOException {
+    @Throws(IOException::class)
+    override fun next(filter: FilenameFilter?): InputStream? {
         while (true) {
             if (this.zipIter == null) {
-                final File file = this.fileIter.next();
+                val file = this.fileIter.next()
                 if (file == null) {
-                    return null;
+                    return null
                 }
                 else {
-                    final String path = file.getPath();
-                    if (path.endsWith(".class") && (filter == null || filter.accept(this.fileIter.getRootFile(), this.fileIter.relativize(
-                                    path)))) {
-                        this.isFile = true;
-                        return new FileInputStream(file);
+                    val path = file.path
+                    if (path.endsWith(".class") && (filter == null || filter.accept(
+                            this.fileIter.rootFile, this.fileIter.relativize(
+                                path
+                            )
+                        ))
+                    ) {
+                        this._isFile = true
+                        return FileInputStream(file)
                     }
                     else if (this.fileIter.isRootFile() && endsWithIgnoreCase(path, ".jar")) {
-                        this.zipIter = new ZipFileIterator(file, this.pkgNameFilter);
+                        this.zipIter = ZipFileIterator(file, this.pkgNameFilter)
                     } // else just ignore
                 }
             }
             else {
-                final InputStream is = this.zipIter.next(filter);
-                if (is == null) {
-                    this.zipIter = null;
+                val `is` = this.zipIter!!.next(filter)
+                if (`is` == null) {
+                    this.zipIter = null
                 }
                 else {
-                    this.isFile = false;
-                    return is;
+                    this._isFile = false
+                    return `is`
                 }
             }
         }
     }
 
-    // private
-
-    private static
-    boolean endsWithIgnoreCase(final String value, final String suffix) {
-        final int n = suffix.length();
-        return value.regionMatches(true, value.length() - n, suffix, 0, n);
+    companion object {
+        private fun endsWithIgnoreCase(value: String, @Suppress("SameParameterValue") suffix: String): Boolean {
+            val n = suffix.length
+            return value.regionMatches(value.length - n, suffix, 0, n, ignoreCase = true)
+        }
     }
 }

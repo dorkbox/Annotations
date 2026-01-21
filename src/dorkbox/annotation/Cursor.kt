@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 dorkbox, llc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* Cursor.java
  *
  * Created: 2014-06-15 (Year-Month-Day)
@@ -19,66 +35,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.annotation;
+package dorkbox.annotation
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.annotation.ElementType
+import java.lang.reflect.Constructor
+import java.lang.reflect.Field
+import java.lang.reflect.Method
 
 /**
- * {@code Cursor} offers a "cursor interface" for working with {@link AnnotationDetector}.
- *
- * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
+ * `Cursor` offers a "cursor interface" for working with [AnnotationDetector].
+ * 
+ * @author [Ronald K. Muller](mailto:rmuller@xiam.nl)
  */
-public
 interface Cursor {
-
     /**
      * Return the type name of the currently reported Java Class File.
      */
-    String getTypeName();
+    val typeName: String
 
     /**
      * Return the Annotation Type currently reported.
      */
-    Class<? extends Annotation> getAnnotationType();
+    val annotationType: Class<out Annotation>
 
     /**
-     * Return the {@code ElementType} of the currently reported {@code Annotation}.
+     * Return the `ElementType` of the currently reported `Annotation`.
      */
-    ElementType getElementType();
+    val elementType: ElementType
 
     /**
-     * Return the member name of the currently reported {@code Annotation}.
+     * Return the member name of the currently reported `Annotation`.
      * In case of an annotation on type level, "&lt;clinit&gt;" is reported.
      */
-    String getMemberName();
+    val memberName: String
 
     /**
-     * Return the {@link Class type} of the currently reported Java Class File.
+     * Return the [type][Class] of the currently reported Java Class File.
      */
-    Class<?> getType();
+    val type: Class<*>
 
     /**
-     * Return the {@link Constructor} instance of the currently reported annotated Constructor.
+     * Return the [Constructor] instance of the currently reported annotated Constructor.
      */
-    Constructor<?> getConstructor();
+    val constructor: Constructor<*>
 
     /**
-     * Return the {@link Field} instance of the currently reported annotated Field.
+     * Return the [Field] instance of the currently reported annotated Field.
      */
-    Field getField();
+    val field: Field
 
     /**
-     * Return the {@link Method} instance of the currently reported annotated Method.
+     * Return the [Method] instance of the currently reported annotated Method.
      */
-    Method getMethod();
+    val method: Method
 
     /**
-     * Return the {@code Annotation} of the reported Annotated Element.
+     * Return the `Annotation` of the reported Annotated Element.
      */
-    <T extends Annotation> T getAnnotation(Class<T> annotationClass);
-
+    fun <T : Annotation> getAnnotation(annotationClass: Class<T>): T
 }

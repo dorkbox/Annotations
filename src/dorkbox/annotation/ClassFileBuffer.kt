@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 dorkbox, llc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* ClassFileBuffer.java
  *
  * Created: 2011-10-10 (Year-Month-Day)
@@ -19,241 +35,194 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.annotation;
+package dorkbox.annotation
 
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*
 
 /**
- * {@code ClassFileBuffer} is used by {@link AnnotationDetector} to efficiently read Java
- * ClassFile files from an {@link InputStream} and parse the content via the {@link DataInput}
+ * `ClassFileBuffer` is used by [AnnotationDetector] to efficiently read Java
+ * ClassFile files from an [InputStream] and parse the content via the [DataInput]
  * interface.
- * <p/>
+ * 
+ * 
  * Note that Java ClassFile files can grow really big,
- * {@code com.sun.corba.se.impl.logging.ORBUtilSystemException} is 128.2 kb!
- *
- * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
+ * `com.sun.corba.se.impl.logging.ORBUtilSystemException` is 128.2 kb!
+ * 
+ * @author [Ronald K. Muller](mailto:rmuller@xiam.nl)
  */
-final
-class ClassFileBuffer implements DataInput {
+internal class ClassFileBuffer : DataInput {
 
-    private byte[] buffer;
-    private int size; // the number of significant bytes read
-    private int pointer; // the "read pointer"
-
-    /**
-     * Create a new, empty {@code ClassFileBuffer} with the default initial capacity (8 kb).
-     */
-    ClassFileBuffer() {
-        this(8 * 1024);
+    constructor(initialCapacity: Int = 8 * 1024) {
+        require(initialCapacity >= 1) { "initialCapacity < 1: $initialCapacity" }
+        this.buffer = ByteArray(initialCapacity)
     }
 
+    private var buffer: ByteArray
+    private var size = 0 // the number of significant bytes read
+    private var pointer = 0 // the "read pointer"
+
     /**
-     * Create a new, empty {@code ClassFileBuffer} with the specified initial capacity.
+     * Create a new, empty `ClassFileBuffer` with the specified initial capacity.
      * The initial capacity must be greater than zero. The internal buffer will grow
      * automatically when a higher capacity is required. However, buffer resizing occurs
      * extra overhead. So in good initial capacity is important in performance critical
      * situations.
      */
-    ClassFileBuffer(final int initialCapacity) {
-        if (initialCapacity < 1) {
-            throw new IllegalArgumentException("initialCapacity < 1: " + initialCapacity);
-        }
-        this.buffer = new byte[initialCapacity];
-    }
 
     /**
-     * Clear and fill the buffer of this {@code ClassFileBuffer} with the
+     * Clear and fill the buffer of this `ClassFileBuffer` with the
      * supplied byte stream.
      * The read pointer is reset to the start of the byte array.
      */
-    public
-    void readFrom(final InputStream in) throws IOException {
-        this.pointer = 0;
-        this.size = 0;
-        int n;
+    @Throws(IOException::class)
+    fun readFrom(`in`: InputStream) {
+        this.pointer = 0
+        this.size = 0
+        var n: Int
         do {
-            n = in.read(this.buffer, this.size, this.buffer.length - this.size);
+            n = `in`.read(this.buffer, this.size, this.buffer.size - this.size)
             if (n > 0) {
-                this.size += n;
+                this.size += n
             }
-            resizeIfNeeded();
-        } while (n >= 0);
+            resizeIfNeeded()
+        } while (n >= 0)
     }
 
     /**
      * Sets the file-pointer offset, measured from the beginning of this file,
      * at which the next read or write occurs.
      */
-    public
-    void seek(final int position) throws IOException {
-        if (position < 0) {
-            throw new IllegalArgumentException("position < 0: " + position);
-        }
+    @Throws(IOException::class)
+    fun seek(position: Int) {
+        require(position >= 0) { "position < 0: $position" }
         if (position > this.size) {
-            throw new EOFException();
+            throw EOFException()
         }
-        this.pointer = position;
+        this.pointer = position
     }
 
     /**
      * Return the size (in bytes) of this Java ClassFile file.
      */
-    public
-    int size() {
-        return this.size;
+    fun size(): Int {
+        return this.size
     }
 
     // DataInput
-
-    @Override
-    public
-    void readFully(final byte[] bytes) throws IOException {
-        readFully(bytes, 0, bytes.length);
+    @Throws(IOException::class)
+    override fun readFully(bytes: ByteArray) {
+        readFully(bytes, 0, bytes.size)
     }
 
-    @Override
-    public
-    void readFully(final byte[] bytes, final int offset, final int length) throws IOException {
-
-        if (length < 0 || offset < 0 || offset + length > bytes.length) {
-            throw new IndexOutOfBoundsException();
+    @Throws(IOException::class)
+    override fun readFully(bytes: ByteArray, offset: Int, length: Int) {
+        if (length < 0 || offset < 0 || offset + length > bytes.size) {
+            throw IndexOutOfBoundsException()
         }
         if (this.pointer + length > this.size) {
-            throw new EOFException();
+            throw EOFException()
         }
-        System.arraycopy(this.buffer, this.pointer, bytes, offset, length);
-        this.pointer += length;
+        System.arraycopy(this.buffer, this.pointer, bytes, offset, length)
+        this.pointer += length
     }
 
-    @Override
-    public
-    int skipBytes(final int n) throws IOException {
-        seek(this.pointer + n);
-        return n;
+    @Throws(IOException::class)
+    override fun skipBytes(n: Int): Int {
+        seek(this.pointer + n)
+        return n
     }
 
-    @Override
-    public
-    byte readByte() throws IOException {
+    @Throws(IOException::class)
+    override fun readByte(): Byte {
         if (this.pointer >= this.size) {
-            throw new EOFException();
+            throw EOFException()
         }
-        return this.buffer[this.pointer++];
+        return this.buffer[this.pointer++]
     }
 
-    @Override
-    public
-    boolean readBoolean() throws IOException {
-        return readByte() != 0;
+    @Throws(IOException::class)
+    override fun readBoolean(): Boolean {
+        return readByte().toInt() != 0
     }
 
-    @Override
-    public
-    int readUnsignedByte() throws IOException {
+    @Throws(IOException::class)
+    override fun readUnsignedByte(): Int {
         if (this.pointer >= this.size) {
-            throw new EOFException();
+            throw EOFException()
         }
-        return read();
+        return read()
     }
 
-    @Override
-    public
-    int readUnsignedShort() throws IOException {
+    @Throws(IOException::class)
+    override fun readUnsignedShort(): Int {
         if (this.pointer + 2 > this.size) {
-            throw new EOFException();
+            throw EOFException()
         }
-        return (read() << 8) + read();
+        return (read() shl 8) + read()
     }
 
-    @Override
-    public
-    short readShort() throws IOException {
-        return (short) readUnsignedShort();
+    @Throws(IOException::class)
+    override fun readShort(): Short {
+        return readUnsignedShort().toShort()
     }
 
-    @Override
-    public
-    char readChar() throws IOException {
-        return (char) readUnsignedShort();
+    @Throws(IOException::class)
+    override fun readChar(): Char {
+        return readUnsignedShort().toChar()
     }
 
-    @Override
-    public
-    int readInt() throws IOException {
+    @Throws(IOException::class)
+    override fun readInt(): Int {
         if (this.pointer + 4 > this.size) {
-            throw new EOFException();
+            throw EOFException()
         }
-        return (read() << 24) +
-               (read() << 16) +
-               (read() << 8) +
-               read();
+        return (read() shl 24) + (read() shl 16) + (read() shl 8) + read()
     }
 
-    @Override
-    public
-    long readLong() throws IOException {
+    @Throws(IOException::class)
+    override fun readLong(): Long {
         if (this.pointer + 8 > this.size) {
-            throw new EOFException();
+            throw EOFException()
         }
-        return ((long) read() << 56) +
-               ((long) read() << 48) +
-               ((long) read() << 40) +
-               ((long) read() << 32) +
-               (read() << 24) +
-               (read() << 16) +
-               (read() << 8) +
-               read();
+        return (read().toLong() shl 56) + (read().toLong() shl 48) + (read().toLong() shl 40) + (read().toLong() shl 32) + (read() shl 24) + (read() shl 16) + (read() shl 8) + read()
     }
 
-    @Override
-    public
-    float readFloat() throws IOException {
-        return Float.intBitsToFloat(readInt());
+    @Throws(IOException::class)
+    override fun readFloat(): Float {
+        return java.lang.Float.intBitsToFloat(readInt())
     }
 
-    @Override
-    public
-    double readDouble() throws IOException {
-        return Double.longBitsToDouble(readLong());
+    @Throws(IOException::class)
+    override fun readDouble(): Double {
+        return java.lang.Double.longBitsToDouble(readLong())
     }
 
     /**
-     * This methods throws an {@link UnsupportedOperationException} because the method
+     * This method throws an [UnsupportedOperationException] because the method
      * is deprecated and not used in the context of this implementation.
-     *
-     * @deprecated Does not support UTF-8, use readUTF() instead
+     * 
      */
-    @Override
-    @Deprecated
-    public
-    String readLine() throws IOException {
-        throw new UnsupportedOperationException("readLine() is deprecated and not supported");
+    @Deprecated("Does not support UTF-8, use readUTF() instead")
+    @Throws(IOException::class)
+    override fun readLine(): String? {
+        throw UnsupportedOperationException("readLine() is deprecated and not supported")
     }
 
-    @Override
-    public
-    String readUTF() throws IOException {
-        return DataInputStream.readUTF(this);
+    @Throws(IOException::class)
+    override fun readUTF(): String {
+        return DataInputStream.readUTF(this)
     }
 
     // private
-
-    private
-    int read() {
-        return this.buffer[this.pointer++] & 0xff;
+    private fun read(): Int {
+        return this.buffer[this.pointer++].toInt() and 0xff
     }
 
-    private
-    void resizeIfNeeded() {
-        if (this.size >= this.buffer.length) {
-            final byte[] newBuffer = new byte[this.buffer.length * 2];
-            System.arraycopy(this.buffer, 0, newBuffer, 0, this.buffer.length);
-            this.buffer = newBuffer;
+    private fun resizeIfNeeded() {
+        if (this.size >= this.buffer.size) {
+            val newBuffer = ByteArray(this.buffer.size * 2)
+            System.arraycopy(this.buffer, 0, newBuffer, 0, this.buffer.size)
+            this.buffer = newBuffer
         }
     }
-
 }

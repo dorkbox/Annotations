@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 dorkbox, llc
+ * Copyright 2026 dorkbox, llc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,103 +13,89 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dorkbox.annotation;
+package dorkbox.annotation
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.io.File
+import java.io.FilenameFilter
+import java.io.IOException
+import java.io.InputStream
+import java.net.URISyntaxException
+import java.net.URL
 
 /**
  * @author dorkbox, llc
  */
-public
-class CustomClassloaderIterator implements ClassIterator {
-
-    private final Iterator<URL> loaderFilesIterator;
-    private ClassFileIterator classFileIterator;
+class CustomClassloaderIterator(fileNames: MutableList<URL>, packageNames: Array<String>) : ClassIterator {
+    private val loaderFilesIterator: MutableIterator<URL>
+    private var classFileIterator: ClassFileIterator? = null
 
     // have to support
     // 1 - scanning the classpath
     // 2 - scanning a specific package
-    public
-    CustomClassloaderIterator(List<URL> fileNames, String[] packageNames) throws IOException {
+    init {
         // if ANY of our filenames DO NOT start with "box", we have to add it as a file, so our iterator picks it up (and if dir, it's
         // children)
 
-        Set<File> files = new HashSet<File>();
-        Iterator<URL> iterator = fileNames.iterator();
+        val files: MutableSet<File> = mutableSetOf()
+        val iterator = fileNames.iterator()
         while (iterator.hasNext()) {
-            URL url = iterator.next();
-            if (!url.getProtocol().equals("box")) {
+            val url = iterator.next()
+            if (url.protocol != "box") {
                 try {
-                    File file = new File(url.toURI());
-                    files.add(file);
-                    iterator.remove();
-                } catch (URISyntaxException ex) {
-                    throw new IOException(ex.getMessage());
+                    val file = File(url.toURI())
+                    files.add(file)
+                    iterator.remove()
+                }
+                catch (ex: URISyntaxException) {
+                    throw IOException(ex.message)
                 }
             }
         }
 
         if (files.isEmpty()) {
-            this.classFileIterator = null;
+            this.classFileIterator = null
         }
         else {
-            this.classFileIterator = new ClassFileIterator(files.toArray(new File[0]), packageNames);
+            this.classFileIterator = ClassFileIterator(filesOrDirectories = files.toTypedArray(), pkgNameFilter = packageNames)
         }
 
-
-        this.loaderFilesIterator = fileNames.iterator();
+        this.loaderFilesIterator = fileNames.iterator()
     }
 
-    @Override
-    public
-    String getName() {
-        // not needed
-        return null;
-    }
 
-    @Override
-    public
-    boolean isFile() {
-        if (this.classFileIterator != null) {
-            return this.classFileIterator.isFile();
+    override val name = "CustomClassloaderIterator"
+
+    override val isFile: Boolean
+        get() {
+            if (this.classFileIterator != null) {
+                return this.classFileIterator!!.isFile
+            }
+
+            return false
         }
 
-        return false;
-    }
-
-    @Override
-    public
-    InputStream next(FilenameFilter filter) throws IOException {
+    @Throws(IOException::class)
+    override fun next(filter: FilenameFilter?): InputStream? {
         if (this.classFileIterator != null) {
             while (true) {
-                InputStream next = this.classFileIterator.next(filter);
+                val next = this.classFileIterator!!.next(filter)
                 if (next == null) {
-                    this.classFileIterator = null;
+                    this.classFileIterator = null
                 }
                 else {
-                    String name = this.classFileIterator.getName();
+                    val name = this.classFileIterator!!.name
                     if (name.endsWith(".class")) {
-                        return next;
+                        return next
                     }
                 }
             }
         }
 
         if (this.loaderFilesIterator.hasNext()) {
-            URL next = this.loaderFilesIterator.next();
-            return next.openStream();
+            val next = this.loaderFilesIterator.next()
+            return next.openStream()
         }
 
-        return null;
+        return null
     }
-
 }
