@@ -47,7 +47,7 @@ Maven Info
     <dependency>
       <groupId>com.dorkbox</groupId>
       <artifactId>Annotations</artifactId>
-      <version>3.2</version>
+      <version>3.3</version>
     </dependency>
 </dependencies>
 ```

@@ -749,7 +749,7 @@ class AnnotationDetector : Builder, Cursor {
         /**
          * Gets the version number.
          */
-        const val version = "3.2"
+        const val version = "3.3"
 
         /**
          * Factory method, starting point for the fluent interface.
