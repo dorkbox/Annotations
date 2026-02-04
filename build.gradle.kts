@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-
-///////////////////////////////
-//////    PUBLISH TO SONATYPE / MAVEN CENTRAL
-////// TESTING : (to local maven repo) <'publish and release' - 'publishToMavenLocal'>
-////// RELEASE : (to sonatype/maven central), <'publish and release' - 'publishToSonatypeAndRelease'>
-///////////////////////////////
-
 gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS   // always show the stacktrace!
+gradle.startParameter.warningMode = WarningMode.All
 
 plugins {
     id("com.dorkbox.GradleUtils") version "4.8"
@@ -32,9 +26,7 @@ plugins {
     kotlin("jvm") version "2.3.0"
 }
 
-///////////////////////////////
-/////  assign 'Extras'
-///////////////////////////////
+
 GradleUtils.load {
     group = "com.dorkbox"
     id = "Annotations"
